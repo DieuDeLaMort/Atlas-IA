@@ -145,8 +145,12 @@ def health():
 # ─────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    host = os.environ.get("HOST", "163.5.59.154")
-    port = int(os.environ.get("PORT", 7778))
+    # Détection automatique de l'IP et du port :
+    # Pterodactyl définit SERVER_IP et SERVER_PORT automatiquement.
+    # On accepte aussi HOST/PORT comme fallback.
+    # Par défaut : 0.0.0.0 (toutes les interfaces) et port 7778.
+    host = os.environ.get("SERVER_IP") or os.environ.get("HOST", "0.0.0.0")
+    port = int(os.environ.get("SERVER_PORT") or os.environ.get("PORT", "7778"))
     debug = os.environ.get("FLASK_DEBUG", "false").lower() == "true"
     print(f"🚀 Atlas démarre sur {host}:{port}...")
     app.run(host=host, port=port, debug=debug)
