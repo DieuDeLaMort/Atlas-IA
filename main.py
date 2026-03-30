@@ -23,18 +23,22 @@ def main():
         print("⚠️  Modèle non trouvé. Lancement de l'entraînement...")
         print()
 
-        from brain.trainer import Trainer
+        try:
+            from brain.trainer import Trainer
 
-        trainer = Trainer(
-            chemin_intents="data/intents.json",
-            chemin_modele="brain/model.json",
-            chemin_vocab="data/vocabulary.json",
-            taille_cachee1=128,
-            taille_cachee2=64,
-            taux_apprentissage=0.01,
-            epochs=5000,
-        )
-        trainer.lancer()
+            trainer = Trainer(
+                chemin_intents="data/intents.json",
+                chemin_modele="brain/model.json",
+                chemin_vocab="data/vocabulary.json",
+                taille_cachee1=128,
+                taille_cachee2=64,
+                taux_apprentissage=0.01,
+                epochs=5000,
+            )
+            trainer.lancer()
+        except Exception as e:
+            print(f"❌ Erreur lors de l'entraînement : {e}")
+            raise SystemExit(1)
 
         print()
         print("✅ Entraînement terminé !")
