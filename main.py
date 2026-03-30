@@ -52,10 +52,11 @@ def main():
     # Lancer le serveur Flask
     from server.app import app
 
-    port = int(os.environ.get("PORT", 5000))
+    host = os.environ.get("HOST", "163.5.59.154")
+    port = int(os.environ.get("PORT", 7778))
     debug = os.environ.get("FLASK_DEBUG", "false").lower() == "true"
-    print(f"🚀 Atlas démarre sur le port {port}...")
-    app.run(host="0.0.0.0", port=port, debug=debug)
+    print(f"🚀 Atlas démarre sur {host}:{port}...")
+    app.run(host=host, port=port, debug=debug)
 
 
 if __name__ == "__main__":
