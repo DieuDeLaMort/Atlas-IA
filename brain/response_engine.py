@@ -251,16 +251,12 @@ class MoteurReponses:
         """Génère une salutation d'accueil style Jarvis."""
         heure = datetime.now().hour
         if 5 <= heure < 12:
-            moment = "matin"
             salut = "Bon matin"
         elif 12 <= heure < 18:
-            moment = "après-midi"
             salut = "Bon après-midi"
         elif 18 <= heure < 22:
-            moment = "soir"
             salut = "Bonsoir"
         else:
-            moment = "nuit"
             salut = "Bonsoir"
 
         nom = "Monsieur"

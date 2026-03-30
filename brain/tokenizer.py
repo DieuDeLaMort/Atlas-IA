@@ -153,10 +153,8 @@ class Tokenizer:
         Transforme une phrase en vecteur Bag of Words.
 
         :param texte: Chaîne d'entrée
-        :return:      Tableau NumPy 1D de taille len(vocabulaire)
+        :return:      Liste de flottants de taille len(vocabulaire) (1.0 si le token est présent, 0.0 sinon)
         """
-        import numpy as np
-
         vecteur = [0.0] * len(self.vocabulaire)
         tokens = self.tokeniser_et_stemmer(texte)
         for token in tokens:
