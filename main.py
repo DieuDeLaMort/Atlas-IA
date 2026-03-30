@@ -14,6 +14,13 @@ import os
 import sys
 import traceback
 
+# Force stdout line-buffering so log lines are never lost when the process crashes
+# (Pterodactyl captures stdout via a pipe, which defaults to block-buffering)
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(line_buffering=True)
+else:
+    sys.stdout = os.fdopen(sys.stdout.fileno(), "w", 1)
+
 # ─────────────────────────────────────────────────
 # Configuration du logging
 # ─────────────────────────────────────────────────
@@ -44,12 +51,18 @@ CHEMIN_MODELE = os.path.join("brain", "model.json")
 
 def detecter_host_port():
     """
-    Détecte l'IP et le port de manière robuste.
-    Pterodactyl définit SERVER_IP et SERVER_PORT.
-    Fallback sur HOST/PORT, puis 0.0.0.0:7778.
+    Détecte l'adresse de bind et le port de manière robuste.
+    Pterodactyl définit SERVER_IP (IP externe) et SERVER_PORT.
+    Le serveur bind TOUJOURS sur 0.0.0.0 à l'intérieur du conteneur ;
+    SERVER_IP est utilisé uniquement pour l'affichage dans les logs.
     Ne crash jamais : retourne les valeurs par défaut en cas de problème.
     """
-    host = os.environ.get("SERVER_IP") or os.environ.get("HOST", "0.0.0.0")
+    # Bind address : toujours 0.0.0.0 dans un conteneur Pterodactyl.
+    # SERVER_IP est l'IP externe — on ne peut pas binder dessus depuis l'intérieur.
+    bind_host = os.environ.get("HOST", "0.0.0.0")
+
+    # IP affichée dans les logs (SERVER_IP si disponible, sinon bind_host)
+    display_host = os.environ.get("SERVER_IP") or bind_host
 
     port_str = os.environ.get("SERVER_PORT") or os.environ.get("PORT", "7778")
     try:
@@ -60,7 +73,7 @@ def detecter_host_port():
         logger.warning("Port invalide '%s' (%s). Utilisation du port par défaut 7778.", port_str, e)
         port = 7778
 
-    return host, port
+    return bind_host, port, display_host
 
 
 # ─────────────────────────────────────────────────
@@ -117,16 +130,16 @@ def lancer_serveur():
         logger.error("Impossible d'importer le serveur Flask :\n%s", traceback.format_exc())
         return False
 
-    host, port = detecter_host_port()
+    host, port, display_host = detecter_host_port()
     debug = os.environ.get("FLASK_DEBUG", "false").lower() == "true"
 
-    logger.info("Atlas démarre sur %s:%d ...", host, port)
+    logger.info("Atlas démarre sur %s:%d (bind: %s) ...", display_host, port, host)
 
     try:
         app.run(host=host, port=port, debug=debug)
     except OSError as e:
         # Port déjà utilisé, permission refusée, etc.
-        logger.error("Impossible de démarrer le serveur sur %s:%d — %s", host, port, e)
+        logger.error("Impossible de démarrer le serveur sur %s:%d — %s", display_host, port, e)
         return False
     except Exception:
         logger.error("Crash du serveur Flask :\n%s", traceback.format_exc())
