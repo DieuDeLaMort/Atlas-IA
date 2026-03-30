@@ -39,10 +39,11 @@ Atlas-IA/
 │   ├── app.py               # Serveur Flask + API REST
 │   └── templates/
 │       └── index.html       # Interface web (HTML/CSS/JS intégré)
-├── train.py                 # Script d'entraînement principal
+├── main.py                  # Point d'entrée principal (entraîne + lance le serveur)
+├── train.py                 # Script d'entraînement seul
 ├── requirements.txt
 ├── Dockerfile
-├── start.sh
+├── start.sh                 # Script shell (délègue à main.py)
 └── README.md
 ```
 
@@ -79,13 +80,17 @@ L'entraînement dure quelques secondes. Il crée :
 - `brain/classes.json` — la liste des intents
 - `data/vocabulary.json` — le vocabulaire appris
 
-### 4. Lancer le serveur
+### 4. Lancer Atlas
 
 ```bash
-python -m server.app
+python main.py
 ```
 
-Ou via le script de démarrage :
+Le script `main.py` s'occupe de tout :
+- Entraînement automatique si le modèle n'existe pas
+- Lancement du serveur Flask
+
+Alternativement, tu peux aussi utiliser le script shell :
 
 ```bash
 chmod +x start.sh
@@ -112,7 +117,7 @@ docker run -p 5000:5000 atlas-ia
 1. Crée un serveur avec l'egg **Python Generic** ou utilise l'image Docker
 2. Upload les fichiers du projet
 3. Configure le port `5000` (ou via la variable `PORT`)
-4. Le script `start.sh` s'occupe de tout :
+4. Le script `main.py` (ou `start.sh`) s'occupe de tout :
    - Entraînement automatique si le modèle n'existe pas
    - Lancement du serveur Flask
 

@@ -14,8 +14,8 @@ COPY . .
 ENV PORT=5000
 EXPOSE 5000
 
-# Rendre le script de démarrage exécutable
+# Rendre le script de démarrage exécutable (fallback)
 RUN chmod +x start.sh
 
-# Démarrage via start.sh
-CMD ["./start.sh"]
+# Démarrage via main.py
+CMD ["python", "main.py"]
