@@ -71,8 +71,16 @@ def detecter_host_port():
 def entrainer_modele():
     """Lance l'entraînement si le modèle n'existe pas. Retourne True si OK."""
     if os.path.isfile(CHEMIN_MODELE):
-        logger.info("Modèle trouvé : %s", CHEMIN_MODELE)
-        return True
+        # Vérifier que le fichier est lisible et non vide
+        try:
+            taille = os.path.getsize(CHEMIN_MODELE)
+            if taille == 0:
+                logger.warning("Fichier modèle vide (%s). Ré-entraînement nécessaire.", CHEMIN_MODELE)
+            else:
+                logger.info("Modèle trouvé : %s (%d octets)", CHEMIN_MODELE, taille)
+                return True
+        except OSError as e:
+            logger.warning("Impossible de lire le modèle (%s) : %s", CHEMIN_MODELE, e)
 
     logger.info("Modèle non trouvé. Lancement de l'entraînement...")
 

@@ -160,7 +160,8 @@ def health():
 # ─────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    # Quand on lance directement server/app.py, on délègue à main.py
-    # pour avoir le logging et la gestion d'erreurs complète.
     import sys
-    sys.exit("Utilise 'python main.py' pour démarrer Atlas.")
+    sys.exit(
+        "L'exécution directe de server/app.py n'est pas supportée.\n"
+        "Utilise 'python main.py' pour démarrer Atlas avec le logging et la gestion d'erreurs."
+    )
