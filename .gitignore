@@ -3,6 +3,9 @@ brain/model.json
 brain/classes.json
 data/vocabulary.json
 
+# Logs
+logs/
+
 # Python
 __pycache__/
 *.py[cod]

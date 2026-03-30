@@ -7,8 +7,10 @@ Expose :
 """
 
 import json
+import logging
 import os
 import random
+import traceback
 
 import numpy as np
 from flask import Flask, jsonify, render_template, request
@@ -16,6 +18,8 @@ from flask_cors import CORS
 
 from brain.neural_network import ReseauNeuronal
 from brain.tokenizer import Tokenizer
+
+logger = logging.getLogger("atlas.server")
 
 # ─────────────────────────────────────────────────
 # Initialisation Flask
@@ -44,27 +48,33 @@ def charger_modele():
     """
     for chemin in [CHEMIN_MODELE, CHEMIN_VOCAB, CHEMIN_CLASSES, CHEMIN_INTENTS]:
         if not os.path.exists(chemin):
+            logger.warning("Fichier manquant : %s", chemin)
             return None
 
-    # Charger le tokenizer
-    tokenizer = Tokenizer()
-    tokenizer.charger(CHEMIN_VOCAB)
+    try:
+        # Charger le tokenizer
+        tokenizer = Tokenizer()
+        tokenizer.charger(CHEMIN_VOCAB)
 
-    # Charger les classes
-    with open(CHEMIN_CLASSES, "r", encoding="utf-8") as f:
-        classes = json.load(f)
+        # Charger les classes
+        with open(CHEMIN_CLASSES, "r", encoding="utf-8") as f:
+            classes = json.load(f)
 
-    # Charger les intents (pour les réponses)
-    with open(CHEMIN_INTENTS, "r", encoding="utf-8") as f:
-        donnees = json.load(f)
-    intents_map = {intent["tag"]: intent["responses"] for intent in donnees["intents"]}
+        # Charger les intents (pour les réponses)
+        with open(CHEMIN_INTENTS, "r", encoding="utf-8") as f:
+            donnees = json.load(f)
+        intents_map = {intent["tag"]: intent["responses"] for intent in donnees["intents"]}
 
-    # Charger le réseau de neurones
-    # On crée le réseau avec des dimensions temporaires (elles seront écrasées par charger())
-    reseau = ReseauNeuronal(1, 1, 1, 1)
-    reseau.charger(CHEMIN_MODELE)
+        # Charger le réseau de neurones
+        # On crée le réseau avec des dimensions temporaires (elles seront écrasées par charger())
+        reseau = ReseauNeuronal(1, 1, 1, 1)
+        reseau.charger(CHEMIN_MODELE)
 
-    return reseau, tokenizer, classes, intents_map
+        return reseau, tokenizer, classes, intents_map
+
+    except Exception:
+        logger.error("Erreur lors du chargement du modèle :\n%s", traceback.format_exc())
+        return None
 
 
 # Chargement global au démarrage
@@ -72,10 +82,10 @@ modele_charge = charger_modele()
 
 if modele_charge:
     reseau, tokenizer, classes, intents_map = modele_charge
-    print("✅ Atlas est prêt à discuter !")
+    logger.info("✅ Atlas est prêt à discuter !")
 else:
     reseau = tokenizer = classes = intents_map = None
-    print("⚠️  Modèle non trouvé. Lance 'python train.py' d'abord.")
+    logger.warning("⚠️  Modèle non trouvé. Lance 'python train.py' d'abord.")
 
 
 # ─────────────────────────────────────────────────
@@ -108,26 +118,31 @@ def chat():
     if not message:
         return jsonify({"error": "Le message est vide"}), 400
 
-    # Vectoriser le message
-    vecteur = np.array([tokenizer.vectoriser(message)])
+    try:
+        # Vectoriser le message
+        vecteur = np.array([tokenizer.vectoriser(message)])
 
-    # Prédire l'intent
-    indice, confiance = reseau.predire(vecteur)
+        # Prédire l'intent
+        indice, confiance = reseau.predire(vecteur)
 
-    # Vérifier le seuil de confiance
-    if confiance < SEUIL_CONFIANCE:
-        reponse = random.choice([
-            "Je ne suis pas sûr de comprendre ta question. Peux-tu reformuler ? 🤔",
-            "Hmm, je n'ai pas bien saisi. Tu peux préciser ? 😊",
-            "Je suis encore en apprentissage ! Essaie de poser la question autrement.",
-            "Je n'ai pas de réponse précise à ça... Tu peux essayer autrement ?"
-        ])
-    else:
-        tag = classes[indice]
-        reponses = intents_map.get(tag, ["Je n'ai pas de réponse à ça."])
-        reponse = random.choice(reponses)
+        # Vérifier le seuil de confiance
+        if confiance < SEUIL_CONFIANCE:
+            reponse = random.choice([
+                "Je ne suis pas sûr de comprendre ta question. Peux-tu reformuler ? 🤔",
+                "Hmm, je n'ai pas bien saisi. Tu peux préciser ? 😊",
+                "Je suis encore en apprentissage ! Essaie de poser la question autrement.",
+                "Je n'ai pas de réponse précise à ça... Tu peux essayer autrement ?"
+            ])
+        else:
+            tag = classes[indice]
+            reponses = intents_map.get(tag, ["Je n'ai pas de réponse à ça."])
+            reponse = random.choice(reponses)
 
-    return jsonify({"response": reponse})
+        return jsonify({"response": reponse})
+
+    except Exception:
+        logger.error("Erreur lors du traitement du message :\n%s", traceback.format_exc())
+        return jsonify({"response": "⚠️ Une erreur interne est survenue. Réessaie !"}), 500
 
 
 @app.route("/health")
@@ -145,12 +160,8 @@ def health():
 # ─────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    # Détection automatique de l'IP et du port :
-    # Pterodactyl définit SERVER_IP et SERVER_PORT automatiquement.
-    # On accepte aussi HOST/PORT comme fallback.
-    # Par défaut : 0.0.0.0 (toutes les interfaces) et port 7778.
-    host = os.environ.get("SERVER_IP") or os.environ.get("HOST", "0.0.0.0")
-    port = int(os.environ.get("SERVER_PORT") or os.environ.get("PORT", "7778"))
-    debug = os.environ.get("FLASK_DEBUG", "false").lower() == "true"
-    print(f"🚀 Atlas démarre sur {host}:{port}...")
-    app.run(host=host, port=port, debug=debug)
+    import sys
+    sys.exit(
+        "L'exécution directe de server/app.py n'est pas supportée.\n"
+        "Utilise 'python main.py' pour démarrer Atlas avec le logging et la gestion d'erreurs."
+    )
