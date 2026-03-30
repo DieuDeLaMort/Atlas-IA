@@ -134,7 +134,7 @@ def chat():
             vecteur = np.array([tokenizer.vectoriser(message)])
             indice, confiance = reseau.predire(vecteur)
 
-            if confiance >= SEUIL_CONFIANCE:
+            if confiance >= SEUIL_CONFIANCE and 0 <= indice < len(classes):
                 tag = classes[indice]
                 reponses = intents_map.get(tag, [])
                 if reponses:
