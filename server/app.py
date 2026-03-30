@@ -18,6 +18,7 @@ from flask_cors import CORS
 
 from brain.neural_network import ReseauNeuronal
 from brain.tokenizer import Tokenizer
+from brain import web_search
 
 logger = logging.getLogger("atlas.server")
 
@@ -105,11 +106,6 @@ def chat():
     Reçoit : {"message": "..."}
     Retourne : {"response": "..."}
     """
-    if reseau is None:
-        return jsonify({
-            "response": "⚠️ Je ne suis pas encore entraîné ! Lance 'python train.py' pour m'entraîner."
-        }), 503
-
     donnees = request.get_json(silent=True)
     if not donnees or "message" not in donnees:
         return jsonify({"error": "Paramètre 'message' manquant"}), 400
@@ -119,24 +115,33 @@ def chat():
         return jsonify({"error": "Le message est vide"}), 400
 
     try:
-        # Vectoriser le message
-        vecteur = np.array([tokenizer.vectoriser(message)])
+        reponse_locale = None
 
-        # Prédire l'intent
-        indice, confiance = reseau.predire(vecteur)
+        # ── Modèle local (si disponible) ──
+        if reseau is not None:
+            vecteur = np.array([tokenizer.vectoriser(message)])
+            indice, confiance = reseau.predire(vecteur)
 
-        # Vérifier le seuil de confiance
-        if confiance < SEUIL_CONFIANCE:
-            reponse = random.choice([
-                "Je ne suis pas sûr de comprendre ta question. Peux-tu reformuler ? 🤔",
-                "Hmm, je n'ai pas bien saisi. Tu peux préciser ? 😊",
-                "Je suis encore en apprentissage ! Essaie de poser la question autrement.",
-                "Je n'ai pas de réponse précise à ça... Tu peux essayer autrement ?"
-            ])
+            if confiance >= SEUIL_CONFIANCE:
+                tag = classes[indice]
+                reponses = intents_map.get(tag, [])
+                if reponses:
+                    reponse_locale = random.choice(reponses)
+
+        # ── Recherche web si le modèle local n'a pas de réponse confiante ──
+        if reponse_locale is None:
+            logger.info("Recherche web pour : %s", message)
+            reponse_web = web_search.chercher(message)
+            if reponse_web:
+                reponse = f"🌐 {reponse_web}"
+            else:
+                reponse = random.choice([
+                    "Je n'ai trouvé aucune information sur ce sujet. Essaie de reformuler ! 🤔",
+                    "Hmm, je n'ai rien trouvé. Tu peux préciser ta question ? 😊",
+                    "Aucune source disponible pour ça. Essaie autrement !",
+                ])
         else:
-            tag = classes[indice]
-            reponses = intents_map.get(tag, ["Je n'ai pas de réponse à ça."])
-            reponse = random.choice(reponses)
+            reponse = reponse_locale
 
         return jsonify({"response": reponse})
 
