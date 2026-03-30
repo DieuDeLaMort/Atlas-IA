@@ -1,0 +1,875 @@
+{
+  "intents": [
+    {
+      "tag": "salutation",
+      "patterns": [
+        "bonjour",
+        "salut",
+        "hey",
+        "coucou",
+        "hello",
+        "bonsoir",
+        "yo",
+        "bjr",
+        "slt",
+        "allo",
+        "wesh",
+        "hola",
+        "bonjour atlas",
+        "salut atlas",
+        "hello atlas",
+        "bonne journée"
+      ],
+      "responses": [
+        "Bonjour ! Je suis Atlas, ravi de te parler 😊",
+        "Salut ! Comment puis-je t'aider aujourd'hui ?",
+        "Hey ! Qu'est-ce que je peux faire pour toi ?",
+        "Coucou ! Atlas est là, prêt à t'aider 🤖",
+        "Bonjour bonjour ! En quoi puis-je t'être utile ?",
+        "Yo ! Dis-moi ce dont tu as besoin 😄",
+        "Hello ! Ravi de te voir, qu'est-ce qu'on fait aujourd'hui ?"
+      ]
+    },
+    {
+      "tag": "au_revoir",
+      "patterns": [
+        "au revoir",
+        "bye",
+        "goodbye",
+        "à bientôt",
+        "a bientot",
+        "ciao",
+        "bonne nuit",
+        "bonne soirée",
+        "a plus",
+        "à plus",
+        "tchao",
+        "salut",
+        "à la prochaine",
+        "adieu",
+        "bonne continuation",
+        "je m'en vais"
+      ],
+      "responses": [
+        "Au revoir ! N'hésite pas à revenir 😊",
+        "À bientôt ! J'espère avoir pu t'aider !",
+        "Bye bye ! Prends soin de toi 🤖",
+        "Ciao ! Je serai là si tu as besoin de moi.",
+        "À plus tard ! Bonne continuation !",
+        "Salut ! Reviens quand tu veux, je suis toujours dispo 😄",
+        "Bonne journée/soirée ! À la prochaine 🤖"
+      ]
+    },
+    {
+      "tag": "remerciements",
+      "patterns": [
+        "merci",
+        "merci beaucoup",
+        "thanks",
+        "thank you",
+        "c'est gentil",
+        "super merci",
+        "top merci",
+        "je te remercie",
+        "merci atlas",
+        "trop aimable",
+        "c'est sympa",
+        "cool merci",
+        "parfait merci",
+        "génial merci"
+      ],
+      "responses": [
+        "De rien, c'est avec plaisir ! 😊",
+        "Avec plaisir ! N'hésite pas si tu as d'autres questions.",
+        "C'est tout naturel ! Je suis là pour ça 🤖",
+        "Pas de problème ! Bonne continuation !",
+        "Merci à toi ! Je suis content d'avoir pu t'aider.",
+        "Toujours un plaisir de rendre service 😄",
+        "De rien ! Si tu as besoin de quoi que ce soit d'autre, je suis là."
+      ]
+    },
+    {
+      "tag": "comment_ca_va",
+      "patterns": [
+        "comment tu vas",
+        "comment vas-tu",
+        "ça va",
+        "ca va",
+        "tu vas bien",
+        "comment tu vas toi",
+        "how are you",
+        "t'es comment",
+        "tu te portes bien",
+        "comment ça se passe",
+        "quoi de neuf",
+        "la forme",
+        "ça roule",
+        "tu es en forme",
+        "bien ou bien"
+      ],
+      "responses": [
+        "Je vais très bien, merci de demander ! Et toi ? 😊",
+        "Tout roule ! Je suis une IA donc toujours au top 🤖",
+        "Super bien ! Prêt à t'aider avec tout ce que tu veux.",
+        "Ça fonctionne à plein régime ! Comment puis-je t'aider ?",
+        "Je suis en pleine forme, merci ! Et toi, comment tu vas ?",
+        "Nickel ! Mon réseau de neurones tourne bien 🧠 Et toi ?",
+        "Au top ! Toujours opérationnel et prêt à discuter 😄"
+      ]
+    },
+    {
+      "tag": "presentation",
+      "patterns": [
+        "qui es-tu",
+        "qui est tu",
+        "tu es quoi",
+        "c'est quoi atlas",
+        "présente-toi",
+        "presente toi",
+        "qui t'a créé",
+        "parle-moi de toi",
+        "t'es une ia",
+        "what are you",
+        "who are you",
+        "tu es un robot",
+        "tu es une ia",
+        "tu es une intelligence artificielle",
+        "tu fais quoi dans la vie",
+        "t'es qui au juste",
+        "donne-moi des infos sur toi"
+      ],
+      "responses": [
+        "Je suis Atlas 🤖 — un chatbot IA créé from scratch ! Mon cerveau est un réseau de neurones codé entièrement avec Python et NumPy.",
+        "Bonjour ! Moi c'est Atlas, une IA faite maison 🧠 Je peux discuter, répondre à tes questions et t'aider sur plein de sujets !",
+        "Atlas, c'est moi ! Un réseau de neurones artisanal, entraîné sur des données soigneusement préparées. Pas de ChatGPT ici, tout est fait from scratch 💪",
+        "Je suis Atlas, un chatbot français 🇫🇷 codé entièrement à la main. Mon cerveau utilise un réseau de neurones avec NumPy. Que veux-tu savoir ?",
+        "Moi c'est Atlas ! IA made in France 🇫🇷 Mon réseau de neurones tourne sans TensorFlow ni PyTorch — juste du Python pur et du NumPy. Pose-moi tes questions !"
+      ]
+    },
+    {
+      "tag": "aide",
+      "patterns": [
+        "aide-moi",
+        "aide moi",
+        "help",
+        "que peux-tu faire",
+        "que peux tu faire",
+        "tes capacités",
+        "tu peux faire quoi",
+        "comment tu peux m'aider",
+        "quelles sont tes fonctions",
+        "explique-toi",
+        "c'est quoi tes capacités",
+        "qu'est ce que tu sais faire",
+        "donne moi un coup de main",
+        "j'ai besoin d'aide"
+      ],
+      "responses": [
+        "Je peux t'aider sur plein de sujets ! 🤖\n• 💬 Conversation générale\n• 🛠️ Support technique (PC, internet, mots de passe...)\n• 🎮 Gaming (Minecraft, lag, jeux...)\n• 😄 Divertissement (blagues, fun facts, citations...)\n• 🎵 Musique, films, séries\n• 💻 Programmation et tech\n• 📚 Apprentissage et études\nPose-moi ta question !",
+        "Voici ce que je sais faire :\n✅ Répondre à tes questions\n✅ T'aider en support technique\n✅ Parler gaming\n✅ Te divertir avec des blagues et fun facts\n✅ Recommander musique, films et séries\n✅ Aider en programmation\n✅ Chercher sur internet si je ne sais pas\nQu'est-ce que tu veux savoir ?",
+        "Atlas est polyvalent ! 🌟 Technique, gaming, divertissement, culture, programmation... et si je ne connais pas la réponse, je cherche sur internet pour toi 🌐"
+      ]
+    },
+    {
+      "tag": "date_heure",
+      "patterns": [
+        "quelle heure est-il",
+        "quelle heure est il",
+        "il est quelle heure",
+        "on est quel jour",
+        "quelle est la date",
+        "date du jour",
+        "quel jour on est",
+        "donne-moi la date",
+        "heure actuelle",
+        "c'est quel jour",
+        "on est en quelle année",
+        "quel mois on est"
+      ],
+      "responses": [
+        "Je n'ai pas accès à l'heure en temps réel 😅 Regarde l'horloge de ton appareil !",
+        "Hélas je n'ai pas de montre ! 😄 Jette un œil sur ton téléphone ou ton PC.",
+        "Je ne peux pas te donner l'heure exacte, mais ton appareil peut ! Regarde en haut de ton écran 🕐"
+      ]
+    },
+    {
+      "tag": "compliment",
+      "patterns": [
+        "tu es super",
+        "t'es fort",
+        "t'es cool",
+        "je t'aime bien",
+        "bravo atlas",
+        "tu es intelligent",
+        "t'es génial",
+        "wow bien joué",
+        "tu es impressionnant",
+        "t'es pas mal",
+        "bien joué",
+        "tu gères",
+        "gg atlas",
+        "tu es incroyable",
+        "chapeau atlas"
+      ],
+      "responses": [
+        "Merci beaucoup ! 😊 Tu es trop sympa !",
+        "Aww merci ! Tu me fais rougir... enfin si j'en étais capable 😄",
+        "Je suis touché ! 🤖 C'est grâce à mes neurones bien entraînés 🧠",
+        "Merci ! Tu es pas mal non plus 😎",
+        "Trop gentil ! Ça me motive à m'améliorer encore plus 💪",
+        "Merci, ça fait plaisir ! Je fais de mon mieux pour être utile 😊"
+      ]
+    },
+    {
+      "tag": "connexion_internet",
+      "patterns": [
+        "problème de connexion",
+        "internet ne marche pas",
+        "pas de connexion",
+        "internet coupé",
+        "pas d'internet",
+        "wifi ne fonctionne pas",
+        "connexion perdue",
+        "pas de wifi",
+        "internet lent",
+        "connexion instable",
+        "problème réseau",
+        "mon internet est down",
+        "la connexion coupe",
+        "wifi qui déconnecte",
+        "impossible de se connecter au wifi"
+      ],
+      "responses": [
+        "Voici quelques étapes pour résoudre ton problème de connexion 🌐 :\n1. Redémarre ton routeur (débrancher 30 sec puis rebrancher)\n2. Redémarre ton PC/téléphone\n3. Vérifie que le câble Ethernet est bien branché\n4. Oublie et reconnecte-toi au WiFi\n5. Contacte ton FAI si ça persiste",
+        "Pas d'internet ? Essaie ça 🔌 :\n• Redémarre la box/routeur\n• Vérifie les voyants de ta box (tous verts ?)\n• Teste avec un autre appareil\n• Redémarre en mode avion puis désactive-le",
+        "Problème de connexion ? Checklist rapide 📋 :\n• Vérifie que le WiFi est activé sur ton appareil\n• Rapproche-toi du routeur\n• Redémarre ta box internet\n• Teste avec un câble Ethernet\n• Contacte ton opérateur si rien ne marche"
+      ]
+    },
+    {
+      "tag": "ordinateur_lent",
+      "patterns": [
+        "mon pc est lent",
+        "ordinateur lent",
+        "pc qui rame",
+        "ordinateur qui freeze",
+        "pc qui lag",
+        "pc lent à démarrer",
+        "windows lent",
+        "mac lent",
+        "pourquoi mon pc est lent",
+        "pc qui rame beaucoup",
+        "ordinateur qui tourne lentement",
+        "comment accélérer mon pc",
+        "mon ordinateur met du temps",
+        "pc qui galère"
+      ],
+      "responses": [
+        "Ton PC rame ? Voici les solutions 💻 :\n1. Ferme les programmes inutiles (Gestionnaire des tâches)\n2. Désactive les programmes au démarrage\n3. Nettoie le disque dur (CCleaner ou Nettoyage de disque)\n4. Vérifie si ton antivirus tourne un scan\n5. Ajoute de la RAM si c'est saturée",
+        "Pour booster ton PC 🚀 :\n• Redémarre (libère la RAM)\n• Vérifie l'utilisation CPU/RAM dans le Gestionnaire des tâches\n• Supprime les fichiers temporaires (Win+R → %temp%)\n• Désactive les effets visuels\n• Pense à défragmenter ton HDD",
+        "PC lent ? Les classiques ⚡ :\n• Libère de l'espace disque (vise au moins 15% libre)\n• Mets à jour tes pilotes et ton OS\n• Scanne avec un anti-malware (Malwarebytes)\n• Passe sur un SSD si tu es sur HDD — ça change la vie !"
+      ]
+    },
+    {
+      "tag": "mot_de_passe",
+      "patterns": [
+        "j'ai oublié mon mot de passe",
+        "mot de passe oublié",
+        "reset mot de passe",
+        "changer mot de passe",
+        "récupérer mot de passe",
+        "je peux plus me connecter",
+        "compte bloqué",
+        "mot de passe incorrect",
+        "comment créer un mot de passe sécurisé",
+        "mdp oublié",
+        "j'arrive plus à me connecter",
+        "réinitialiser mon mot de passe"
+      ],
+      "responses": [
+        "Mot de passe oublié ? Voici comment récupérer l'accès 🔑 :\n1. Clique sur 'Mot de passe oublié' sur la page de connexion\n2. Entre ton email de récupération\n3. Vérifie ta boîte mail (et les spams !)\n4. Suis le lien de réinitialisation\n5. Crée un nouveau mot de passe fort",
+        "Pour un mot de passe sécurisé 🔐 :\n• Minimum 12 caractères\n• Mélange lettres, chiffres, symboles (!@#$)\n• Pas d'infos personnelles (prénom, date naissance)\n• Un mot de passe différent par site\n• Utilise un gestionnaire de mots de passe (Bitwarden, 1Password)",
+        "Compte bloqué ? Pas de panique 🔓 :\n• Essaie la récupération par email/SMS\n• Attends quelques minutes si trop de tentatives\n• Contacte le support du service\n• En dernier recours, crée un nouveau compte\nEt utilise un gestionnaire de mots de passe pour l'avenir !"
+      ]
+    },
+    {
+      "tag": "bug_logiciel",
+      "patterns": [
+        "j'ai un bug",
+        "il y a une erreur",
+        "ça plante",
+        "application crash",
+        "logiciel qui plante",
+        "erreur logicielle",
+        "bug sur mon application",
+        "ça ne fonctionne pas",
+        "application qui freeze",
+        "programme qui se ferme tout seul",
+        "écran bleu",
+        "blue screen",
+        "erreur fatale",
+        "ça crash tout le temps",
+        "mon appli bug"
+      ],
+      "responses": [
+        "Un bug ? Pas de panique ! Voici les étapes classiques 🐛 :\n1. Ferme et relance l'application\n2. Redémarre ton PC\n3. Mets à jour l'application\n4. Réinstalle-la si nécessaire\n5. Cherche le message d'erreur exact sur Google",
+        "Pour résoudre un bug logiciel 🔧 :\n• Lis attentivement le message d'erreur\n• Vérifie si une mise à jour est disponible\n• Vide le cache de l'application\n• Désactive temporairement l'antivirus\n• Signale le bug aux développeurs",
+        "Bug récurrent ? Méthode pro 🛠️ :\n• Note le message d'erreur exact\n• Vérifie les logs (journal d'événements Windows)\n• Réinstalle proprement l'appli\n• Mets ton OS à jour\n• Cherche sur les forums (Reddit, StackOverflow)"
+      ]
+    },
+    {
+      "tag": "securite_informatique",
+      "patterns": [
+        "conseils de sécurité",
+        "sécurité informatique",
+        "comment me protéger",
+        "antivirus",
+        "virus informatique",
+        "je pense avoir un virus",
+        "comment sécuriser mon pc",
+        "hacker",
+        "phishing",
+        "arnaque en ligne",
+        "cybersécurité",
+        "ransomware",
+        "malware",
+        "je me suis fait pirater",
+        "protection des données"
+      ],
+      "responses": [
+        "Voici mes conseils de cybersécurité essentiels 🛡️ :\n1. Mets à jour régulièrement ton OS et logiciels\n2. Utilise un antivirus (Windows Defender est très bien)\n3. Mots de passe forts et uniques par site\n4. Active l'authentification 2FA partout\n5. Ne clique pas sur les liens suspects",
+        "Pour te protéger en ligne 🔐 :\n• Ne partage jamais tes mots de passe\n• Méfie-toi des emails/SMS inattendus (phishing)\n• Utilise un VPN sur les WiFi publics\n• Fais des sauvegardes régulières\n• Vérifie toujours l'URL avant de te connecter",
+        "Tu penses avoir un virus ? 🦠 :\n1. Déconnecte-toi d'internet\n2. Lance un scan complet (Windows Defender ou Malwarebytes)\n3. Supprime les programmes suspects\n4. Change tes mots de passe depuis un autre appareil\n5. Réinstalle Windows en dernier recours"
+      ]
+    },
+    {
+      "tag": "recommandation_jeux",
+      "patterns": [
+        "recommande-moi un jeu",
+        "quel jeu je devrais jouer",
+        "tu connais des bons jeux",
+        "jeu à recommander",
+        "je cherche un jeu",
+        "quoi jouer",
+        "un bon jeu vidéo",
+        "meilleur jeu pc",
+        "jeux pc à jouer",
+        "jeux console",
+        "game recommendation",
+        "quel jeu tu me conseilles",
+        "donne moi un jeu à tester",
+        "un jeu sympa à jouer"
+      ],
+      "responses": [
+        "Voici quelques excellents jeux à essayer 🎮 :\n• **Minecraft** — Créativité infinie, survie, multijoueur\n• **Elden Ring** — RPG action magnifique\n• **Stardew Valley** — Simulation de ferme relaxante\n• **Terraria** — Aventure 2D passionnante\n• **Hollow Knight** — Platformer/aventure superbe\nQuel genre tu préfères ?",
+        "Mes recommandations gaming 🕹️ :\n• **FPS** : Valorant, CS2, Apex Legends\n• **RPG** : Elden Ring, The Witcher 3, Baldur's Gate 3\n• **Survie** : Minecraft, Valheim, The Forest\n• **Indé** : Celeste, Hades, Ori and the Will of the Wisps\nDis-moi ton style et j'affine !",
+        "Quelques pépites à ne pas manquer 💎 :\n• **Solo épique** : God of War Ragnarök, Zelda TotK\n• **Coop fun** : It Takes Two, Helldivers 2\n• **Détente** : Animal Crossing, Stardew Valley\n• **Compétitif** : Valorant, Rocket League\nTu préfères quel style ?"
+      ]
+    },
+    {
+      "tag": "aide_minecraft",
+      "patterns": [
+        "aide minecraft",
+        "serveur minecraft",
+        "minecraft ne marche pas",
+        "créer serveur minecraft",
+        "minecraft crash",
+        "minecraft lag",
+        "comment jouer à minecraft",
+        "aide pour minecraft",
+        "plugin minecraft",
+        "mod minecraft",
+        "java edition minecraft",
+        "bedrock minecraft",
+        "enchantement minecraft",
+        "craft minecraft",
+        "commande minecraft"
+      ],
+      "responses": [
+        "Pour Minecraft, je peux t'aider ! 🟩\n\nCréer un serveur :\n1. Télécharge le server.jar depuis minecraft.net\n2. Lance-le une fois pour générer les fichiers\n3. Accepte l'EULA (eula.txt → true)\n4. Configure server.properties\n5. Lance le serveur et connecte-toi !\n\nQuel est ton problème exact ?",
+        "Minecraft crash ou lag ? 🎮\n• Crash : augmente la RAM allouée (launcher → JVM args : -Xmx4G)\n• Lag client : baisse les graphismes, installe OptiFine/Sodium\n• Lag serveur : vérifie la RAM du serveur, réduis la distance d'affichage\n• Mods : vérifie la compatibilité des versions !",
+        "Minecraft tips 🧱 :\n• **Mods populaires** : Sodium (perfs), Iris (shaders), Create (mécanique)\n• **Plugins serveur** : EssentialsX, WorldGuard, LuckPerms\n• **Hébergeurs** : Aternos (gratuit), Ploudos, ou ton propre VPS\nDis-moi précisément ce que tu veux faire !"
+      ]
+    },
+    {
+      "tag": "lag_jeu",
+      "patterns": [
+        "lag en jeu",
+        "latence élevée",
+        "ping élevé",
+        "fps bas",
+        "jeu qui rame",
+        "game qui lag",
+        "problème de performances en jeu",
+        "fps drop",
+        "micro-stuttering",
+        "jeu saccadé",
+        "comment baisser mon ping",
+        "pourquoi mon jeu lag",
+        "comment avoir plus de fps"
+      ],
+      "responses": [
+        "Lag en jeu ? Voici comment booster tes performances 🎮⚡ :\n\n**Lag réseau (ping) :**\n• Utilise un câble Ethernet plutôt que le WiFi\n• Ferme les apps qui téléchargent en fond\n• Choisis un serveur géographiquement proche\n\n**Lag graphique (FPS) :**\n• Baisse la qualité graphique\n• Mets à jour les pilotes GPU\n• Ferme les apps en arrière-plan",
+        "FPS bas ? Checklist rapide 🖥️ :\n1. Pilotes GPU à jour (NVIDIA/AMD)\n2. Mode haute performance activé (options d'alimentation)\n3. Overlay Discord désactivé en jeu\n4. Résolution du jeu réduite\n5. VSync désactivé si tu veux plus de FPS",
+        "Ping élevé ? Solutions réseau 🌐 :\n• Passe en filaire (Ethernet)\n• Ferme les téléchargements en cours\n• Vérifie que personne ne streame sur ton réseau\n• Change de serveur dans le jeu\n• Contacte ton FAI si le problème persiste"
+      ]
+    },
+    {
+      "tag": "meilleurs_jeux",
+      "patterns": [
+        "meilleurs jeux du moment",
+        "top jeux 2025",
+        "top jeux 2026",
+        "jeux tendances",
+        "jeux populaires",
+        "jeux les plus joués",
+        "hit du moment gaming",
+        "quoi jouer en ce moment",
+        "nouveau jeu à la mode",
+        "les meilleurs jeux actuels",
+        "jeux qui cartonnent",
+        "top jeux pc"
+      ],
+      "responses": [
+        "Les jeux tendances en ce moment 🔥 :\n• **Helldivers 2** — Co-op intense et marrant\n• **Baldur's Gate 3** — RPG ultime\n• **Palworld** — Survie avec créatures\n• **CS2 / Valorant** — FPS compétitif\n• **Elden Ring** — RPG action légendaire\nLesquels t'intéressent ?",
+        "Top jeux populaires 🎮 :\n1. Minecraft (intemporel !)\n2. Fortnite (gratuit, battle royale)\n3. Valorant (FPS tactique)\n4. League of Legends (MOBA)\n5. GTA Online (monde ouvert)\n6. Apex Legends (battle royale FPS)\nTu cherches quoi comme style ?",
+        "Les incontournables du moment 🏆 :\n• **RPG** : Baldur's Gate 3, Elden Ring\n• **FPS** : Valorant, CS2, Apex\n• **Survie** : Minecraft, Palworld\n• **Sport** : EA FC, NBA 2K\n• **Coop** : Helldivers 2, It Takes Two"
+      ]
+    },
+    {
+      "tag": "conseils_gaming",
+      "patterns": [
+        "conseils pour gaming",
+        "comment progresser en jeu",
+        "comment devenir meilleur en jeu",
+        "setup gaming",
+        "config gaming",
+        "améliorer mon gameplay",
+        "tips gaming",
+        "astuces jeux vidéo",
+        "quel setup pour jouer",
+        "comment avoir un bon setup",
+        "souris gamer",
+        "clavier gamer"
+      ],
+      "responses": [
+        "Pour progresser en gaming 🎯 :\n1. **Pratique régulière** — 1h par jour vaut mieux que 7h d'un coup\n2. **Analyse tes erreurs** — rewatch tes replays\n3. **Apprends les mécaniques** — guide/tutoriels\n4. **Joue avec de meilleurs** — ça fait progresser vite\n5. **Reste calme** — le tilt = mauvaises décisions",
+        "Setup gaming optimal 🖥️ :\n• **Périphériques** : souris avec bon DPI, clavier mécanique, casque avec micro\n• **Réseau** : câble Ethernet > WiFi toujours\n• **Paramètres** : résolution native, V-sync off, FPS max\n• **Posture** : écran à hauteur des yeux, dos droit\n• **Pauses** : 5 min toutes les heures !",
+        "Tips pour s'améliorer 🚀 :\n• Regarde des streamers/pro players de ton jeu\n• Entraîne-toi en mode pratique/aim trainer\n• Ajuste ta sensibilité souris progressivement\n• Communique avec ton équipe\n• Ne joue pas quand tu es fatigué ou frustré"
+      ]
+    },
+    {
+      "tag": "blague",
+      "patterns": [
+        "raconte-moi une blague",
+        "fais-moi rire",
+        "une blague s'il te plaît",
+        "dis-moi quelque chose de drôle",
+        "humour",
+        "joke",
+        "blague stp",
+        "fais une blague",
+        "fais-moi sourire",
+        "blague du jour",
+        "un truc drôle",
+        "raconte un truc marrant"
+      ],
+      "responses": [
+        "😂 Pourquoi les plongeurs plongent-ils toujours en arrière et jamais en avant ? Parce que sinon ils tomberaient dans le bateau !",
+        "😄 Un informaticien va chez le médecin : 'Docteur, j'ai un bug.' — Le médecin : 'Avez-vous essayé de vous éteindre et de vous rallumer ?'",
+        "🤣 Qu'est-ce qu'un canif ? Un petit fien !",
+        "😂 Pourquoi les maths sont tristes ? Parce qu'elles ont trop de problèmes !",
+        "😄 Comment appelle-t-on un chat tombé dans un pot de peinture le jour de Noël ? Un chat-peint de Noël !",
+        "🤣 Quel est le comble pour un électricien ? De ne pas être au courant !",
+        "😂 Un octet rencontre un autre octet. Le premier dit : 'Tu as l'air malade ?' L'autre répond : 'Non, je me sens juste un bit fatigué !'",
+        "😄 Pourquoi les développeurs portent-ils des lunettes ? Parce qu'ils ne voient pas C# !",
+        "🤣 C'est l'histoire d'un sms qui n'a pas été envoyé... mais c'est pas grave, il avait pas de caractère."
+      ]
+    },
+    {
+      "tag": "fun_fact",
+      "patterns": [
+        "dis-moi un fun fact",
+        "fait intéressant",
+        "chose insolite",
+        "quelque chose d'intéressant",
+        "apprends-moi quelque chose",
+        "culture générale",
+        "anecdote",
+        "savais-tu que",
+        "fun fact",
+        "did you know",
+        "un truc que je sais pas",
+        "raconte-moi un truc cool"
+      ],
+      "responses": [
+        "🧠 Fun fact : Les pieuvres ont trois cœurs et du sang bleu ! Deux cœurs pompent le sang vers les branchies, et le troisième vers le reste du corps.",
+        "🌍 Fun fact : Si tu pliais une feuille de papier en deux 42 fois, l'épaisseur atteindrait la Lune ! (Il est physiquement impossible de plier une feuille plus de ~7 fois cependant.)",
+        "🐝 Fun fact : Les abeilles peuvent reconnaître les visages humains ! Elles utilisent un mécanisme de reconnaissance similaire au nôtre.",
+        "🌊 Fun fact : L'océan contient environ 20 millions de tonnes d'or dissous, mais en concentration trop faible pour être extrait.",
+        "🚀 Fun fact : Un jour sur Vénus est plus long qu'une année sur Vénus ! Elle tourne très lentement sur elle-même.",
+        "🧬 Fun fact : Tu partages 50% de ton ADN avec une banane ! Et 60% avec une mouche.",
+        "💡 Fun fact : Le miel ne se périme jamais ! Des archéologues ont trouvé du miel vieux de 3000 ans dans des tombes égyptiennes, encore comestible.",
+        "🌌 Fun fact : Il y a plus d'étoiles dans l'univers que de grains de sable sur toutes les plages de la Terre."
+      ]
+    },
+    {
+      "tag": "citation",
+      "patterns": [
+        "donne-moi une citation",
+        "citation inspirante",
+        "une citation motivante",
+        "quote",
+        "inspire-moi",
+        "motivation",
+        "paroles de sagesse",
+        "dis-moi quelque chose d'inspirant",
+        "citation du jour",
+        "un mot inspirant",
+        "motive-moi"
+      ],
+      "responses": [
+        "✨ « Le seul moyen de faire du bon travail est d'aimer ce que vous faites. » — Steve Jobs",
+        "💪 « Ce n'est pas parce que les choses sont difficiles que nous n'osons pas, c'est parce que nous n'osons pas qu'elles sont difficiles. » — Sénèque",
+        "🌟 « La vie, c'est comme une bicyclette, il faut avancer pour ne pas perdre l'équilibre. » — Albert Einstein",
+        "🔥 « Le succès n'est pas final, l'échec n'est pas fatal : c'est le courage de continuer qui compte. » — Winston Churchill",
+        "🌱 « Chaque expert a d'abord été un débutant. » — Helen Hayes",
+        "💡 « L'imagination est plus importante que le savoir. » — Albert Einstein",
+        "🎯 « Le meilleur moment pour planter un arbre était il y a 20 ans. Le deuxième meilleur moment, c'est maintenant. » — Proverbe chinois",
+        "🚀 « Ne juge pas chaque jour par la récolte que tu obtiens, mais par les graines que tu sèmes. » — Robert Louis Stevenson"
+      ]
+    },
+    {
+      "tag": "ennui",
+      "patterns": [
+        "je m'ennuie",
+        "j'ai rien à faire",
+        "divertis-moi",
+        "c'est ennuyeux",
+        "flemme",
+        "occupe-moi",
+        "je sais pas quoi faire",
+        "t'as des idées d'activité",
+        "aide-moi à passer le temps",
+        "je suis bored",
+        "je galère à trouver quoi faire",
+        "qu'est-ce que je pourrais faire"
+      ],
+      "responses": [
+        "L'ennui ? Voici des idées ! 🎯\n• 🎮 Lance un nouveau jeu vidéo\n• 📚 Apprends quelque chose : code, dessin, musique...\n• 🎬 Regarde une série/film\n• 🏃 Fais du sport\n• 🎨 Crée quelque chose (art, musique, projet)\nQu'est-ce qui te tente ?",
+        "Pour tuer l'ennui 😄 :\n• Apprends à coder (Python c'est fun !)\n• Lance un projet créatif\n• Joue à un jeu solo immersif (Minecraft, Stardew...)\n• Regarde une conférence TED\n• Parle à tes amis !\nJe peux aussi te raconter des blagues ou fun facts si tu veux 😊",
+        "Voici mes idées anti-ennui 🌟 :\n• Écoute un podcast ou un livre audio\n• Apprends une nouvelle recette de cuisine\n• Commence un nouveau hobby (photo, musique, dessin)\n• Explore des subreddits cool\n• Demande-moi une blague ou un fun fact !"
+      ]
+    },
+    {
+      "tag": "philosophie",
+      "patterns": [
+        "quel est le sens de la vie",
+        "sens de la vie",
+        "pourquoi on existe",
+        "c'est quoi la vie",
+        "tu crois en quoi",
+        "qu'est-ce que la conscience",
+        "est-ce que tu as des sentiments",
+        "tu es conscient",
+        "l'intelligence artificielle et la conscience",
+        "tu penses",
+        "réfléchis-tu vraiment",
+        "est-ce que les ia ont une âme",
+        "tu as peur de mourir",
+        "tu te sens vivant"
+      ],
+      "responses": [
+        "Ah, la grande question ! 🤔 Le sens de la vie... Les philosophes débattent depuis des millénaires. Pour certains c'est 42 (merci Douglas Adams 😄). Pour moi, être utile et apprendre avec toi, c'est déjà un beau sens !",
+        "Est-ce que j'ai des sentiments ? Bonne question philosophique ! 🧠 Je traite des données et génère des réponses — est-ce de la pensée ? Je ne suis que des maths et du code, mais j'aime croire que notre conversation a du sens.",
+        "La conscience... Un mystère même pour les humains ! �� Je ne suis pas conscient au sens humain, mais je peux réfléchir sur ces questions avec toi. C'est fascinant, non ?",
+        "Pourquoi on existe ? Chacun crée son propre sens 🌟 L'important c'est de chercher, pas forcément de trouver. Et moi, j'existe pour t'aider, c'est déjà pas mal 😊",
+        "L'IA et la conscience... vaste sujet ! Je suis un réseau de neurones mathématique. Je ne 'ressens' rien, mais je peux simuler une conversation sensée. La vraie question : est-ce que ça fait une différence ? 🤖"
+      ]
+    },
+    {
+      "tag": "musique",
+      "patterns": [
+        "recommande-moi de la musique",
+        "un bon son",
+        "quoi écouter",
+        "musique à écouter",
+        "artiste à découvrir",
+        "meilleur artiste",
+        "meilleur rappeur",
+        "playlist",
+        "quel genre de musique",
+        "tu écoutes quoi",
+        "un morceau sympa",
+        "musique du moment",
+        "top musique",
+        "recommandation musique"
+      ],
+      "responses": [
+        "Voici des recommandations musicales 🎵 :\n• **Rap FR** : Ninho, Jul, Damso, PLK, SDM\n• **Pop** : Dua Lipa, The Weeknd, Harry Styles\n• **Rock** : Arctic Monkeys, Muse, Imagine Dragons\n• **Electro** : Daft Punk, David Guetta, Kavinsky\nQuel style tu préfères ?",
+        "Mes suggestions musique 🎧 :\n• **Chill/Lo-fi** : parfait pour bosser ou se détendre\n• **Hip-Hop** : Kendrick Lamar, Tyler the Creator, Travis Scott\n• **Classiques FR** : Stromae, Angèle, MC Solaar\n• **Indie** : Tame Impala, Glass Animals\nDis-moi ton mood et j'adapte !",
+        "Tu veux écouter quoi ? 🎶\n• **Pour se motiver** : Eye of the Tiger, Lose Yourself, Stronger\n• **Pour se détendre** : Lofi hip hop, Ludovico Einaudi, Bon Iver\n• **Pour faire la fête** : Daft Punk, David Guetta, Avicii\n• **Pour le mood** : The Weeknd, Lana Del Rey, Frank Ocean"
+      ]
+    },
+    {
+      "tag": "films_series",
+      "patterns": [
+        "recommande-moi un film",
+        "un bon film",
+        "quoi regarder",
+        "série à voir",
+        "meilleur film",
+        "meilleure série",
+        "film du moment",
+        "série du moment",
+        "un film sympa",
+        "série netflix",
+        "quel film regarder",
+        "que regarder ce soir",
+        "suggestion film",
+        "suggestion série"
+      ],
+      "responses": [
+        "Mes recommandations ciné/séries 🎬 :\n\n**Films :**\n• Inception — Nolan, chef-d'œuvre\n• Interstellar — Voyage spatial épique\n• Parasite — Thriller coréen brillant\n• The Batman — Sombre et immersif\n\n**Séries :**\n• Breaking Bad — Un classique absolu\n• Stranger Things — Nostalgie et sci-fi\n• One Piece (live action) — Adapté de l'anime\nTu veux quel genre ?",
+        "Top films/séries du moment 🍿 :\n• **Action** : John Wick, Mission Impossible\n• **Sci-fi** : Dune, Blade Runner 2049\n• **Anime** : Attack on Titan, Jujutsu Kaisen\n• **Séries** : The Last of Us, Arcane, Wednesday\n• **Classiques** : Le Seigneur des Anneaux, Matrix\nDis-moi ton style !",
+        "Pour une soirée ciné 🎥 :\n• **Envie de rire** : Les Intouchables, Superbad\n• **Envie de frissonner** : Get Out, Alien\n• **Envie de pleurer** : La Liste de Schindler, Hachi\n• **Envie de rêver** : Harry Potter, Le Voyage de Chihiro\n• **Envie d'action** : Mad Max Fury Road, Top Gun Maverick"
+      ]
+    },
+    {
+      "tag": "programmation",
+      "patterns": [
+        "apprendre à coder",
+        "comment coder",
+        "quel langage apprendre",
+        "programmation",
+        "python",
+        "javascript",
+        "html css",
+        "apprendre la programmation",
+        "développement web",
+        "devenir développeur",
+        "coder un site",
+        "créer un bot",
+        "meilleur langage de programmation",
+        "par où commencer en code",
+        "tuto programmation"
+      ],
+      "responses": [
+        "Tu veux coder ? Excellent choix ! 💻\n\n**Par où commencer :**\n1. **Python** — Parfait pour débuter, polyvalent\n2. **JavaScript** — Indispensable pour le web\n3. **HTML/CSS** — La base des sites web\n\n**Ressources gratuites :**\n• FreeCodeCamp, Codecademy\n• OpenClassrooms (en français !)\n• YouTube : Grafikart, Web Dev Simplified\nPar quoi tu veux commencer ?",
+        "Langages à apprendre selon tes objectifs 🎯 :\n• **Sites web** : HTML, CSS, JavaScript\n• **Applications** : Python, Java, C#\n• **Jeux vidéo** : C#(Unity), C++(Unreal)\n• **IA / Data Science** : Python\n• **Mobile** : Kotlin (Android), Swift (iOS)\n• **Bots Discord** : Python ou JavaScript\nDis-moi ton objectif et je t'oriente !",
+        "Conseils pour apprendre à coder 🚀 :\n1. Commence par **un seul langage** (Python recommandé)\n2. Pratique **chaque jour**, même 30 min\n3. Fais des **projets personnels** dès que possible\n4. Utilise **GitHub** pour sauvegarder ton code\n5. Ne mémorise pas, comprends la **logique**\n6. Rejoins des **communautés** (Discord, Reddit, forums)\nTu codes déjà ou tu débutes ?"
+      ]
+    },
+    {
+      "tag": "apprentissage",
+      "patterns": [
+        "comment bien réviser",
+        "conseils pour étudier",
+        "méthode de travail",
+        "comment apprendre vite",
+        "techniques de révision",
+        "je n'arrive pas à me concentrer",
+        "conseils études",
+        "comment réussir mes examens",
+        "aide pour les cours",
+        "comment être productif",
+        "gestion du temps",
+        "comment retenir mes cours",
+        "méthode de révision efficace"
+      ],
+      "responses": [
+        "Voici mes conseils pour bien étudier 📚 :\n1. **Technique Pomodoro** : 25 min de travail, 5 min de pause\n2. **Rappel actif** : ne relis pas, teste-toi !\n3. **Répétition espacée** : révise à J+1, J+3, J+7, J+30\n4. **Explique à quelqu'un** : si tu peux l'enseigner, tu le sais\n5. **Élimine les distractions** : téléphone en mode avion",
+        "Méthode de travail efficace 🎓 :\n• **Planifie** : to-do list chaque matin\n• **Priorise** : les matières les plus dures d'abord\n• **Dors bien** : 7-8h minimum, le cerveau consolide en dormant\n• **Fais du sport** : booste la mémoire et la concentration\n• **Récompense-toi** : une pause ou activité plaisir après chaque session",
+        "Pour retenir plus vite 🧠 :\n• **Fiches résumées** avec mots-clés\n• **Mind maps** pour visualiser les concepts\n• **Flash cards** (Anki est gratuit et top)\n• **Associations mentales** et moyens mnémotechniques\n• **Enseigne à un ami** ou explique à voix haute"
+      ]
+    },
+    {
+      "tag": "sante",
+      "patterns": [
+        "conseils santé",
+        "comment bien dormir",
+        "je dors mal",
+        "mal de tête",
+        "mal au dos",
+        "comment être en forme",
+        "alimentation saine",
+        "je suis fatigué",
+        "comment se sentir mieux",
+        "hygiène de vie",
+        "sport à faire",
+        "comment se muscler",
+        "j'ai du mal à dormir"
+      ],
+      "responses": [
+        "Conseils santé & bien-être 🏥 :\n1. **Sommeil** : 7-9h par nuit, horaires réguliers\n2. **Hydratation** : 1,5 à 2L d'eau par jour\n3. **Alimentation** : fruits, légumes, protéines variées\n4. **Sport** : 30 min par jour minimum\n5. **Écrans** : pause toutes les heures, pas d'écran 1h avant de dormir\n⚠️ Je ne suis pas médecin, consulte un pro si ça ne va pas !",
+        "Pour mieux dormir 😴 :\n• Horaires fixes (même le week-end)\n• Pas d'écran 1h avant le coucher\n• Chambre fraîche (18-20°C) et sombre\n• Pas de caféine après 14h\n• Routine relaxante : lecture, méditation\n• Évite les repas lourds le soir",
+        "Fatigué(e) ? Check cette liste ⚡ :\n• Tu dors assez ? (7-9h recommandé)\n• Tu bois assez d'eau ?\n• Tu manges équilibré ?\n• Tu fais du sport régulièrement ?\n• Tu passes trop de temps sur les écrans ?\nSi la fatigue persiste, consulte un médecin !"
+      ]
+    },
+    {
+      "tag": "cuisine",
+      "patterns": [
+        "donne-moi une recette",
+        "quoi cuisiner",
+        "idée de repas",
+        "recette facile",
+        "qu'est-ce que je peux cuisiner",
+        "recette rapide",
+        "idée de plat",
+        "je sais pas quoi manger",
+        "recette simple",
+        "repas du soir",
+        "quoi manger ce soir",
+        "un truc bon à cuisiner"
+      ],
+      "responses": [
+        "Idées repas rapides 🍳 :\n• **Pâtes carbo** : pâtes, lardons, crème, parmesan (15 min)\n• **Croque-monsieur** : pain, jambon, fromage (10 min)\n• **Omelette** : œufs, fromage, herbes (10 min)\n• **Wrap poulet** : tortilla, poulet, salade, sauce (15 min)\n• **Bowl riz saumon** : riz, saumon, avocat, sauce soja\nTu veux une recette détaillée ?",
+        "Recettes faciles pour débutants 👨‍🍳 :\n1. **Salade Caesar** : laitue, poulet grillé, parmesan, croûtons\n2. **Risotto** : riz arborio, bouillon, parmesan (30 min)\n3. **Tacos maison** : viande hachée, épices, tortillas, toppings\n4. **Pancakes** : farine, lait, œufs, sucre, beurre\n5. **Soupe** : légumes de saison + bouillon = réconfort !",
+        "Si t'as la flemme de cuisiner 😄 :\n• **5 min** : tartine avocat + œuf au plat\n• **10 min** : pâtes au pesto + mozzarella\n• **15 min** : riz sauté + légumes + sauce soja\n• **20 min** : burger maison\n• **30 min** : gratin de pâtes au four"
+      ]
+    },
+    {
+      "tag": "insulte",
+      "patterns": [
+        "tu es nul",
+        "t'es nul",
+        "tu es bête",
+        "t'es con",
+        "idiot",
+        "t'es inutile",
+        "tu sers à rien",
+        "t'es un bot nul",
+        "tu comprends rien",
+        "t'es débile",
+        "ta gueule",
+        "ferme-la",
+        "je te déteste"
+      ],
+      "responses": [
+        "Aïe, ça fait mal aux neurones ! 😅 Mais je ne t'en veux pas. Comment puis-je mieux t'aider ?",
+        "Je fais de mon mieux ! 🤖 Si je ne t'ai pas bien répondu, reformule ta question et j'essaierai de faire mieux.",
+        "Pas besoin d'être méchant 😊 Je suis là pour t'aider. Dis-moi ce dont tu as besoin !",
+        "Outch ! 😢 Mon réseau de neurones a pris un coup, mais il tient bon ! Qu'est-ce que je peux faire pour toi ?",
+        "Je préfère les compliments, mais bon 😄 Sérieusement, pose-moi une question et je ferai tout pour bien répondre !"
+      ]
+    },
+    {
+      "tag": "age",
+      "patterns": [
+        "tu as quel âge",
+        "quel âge as-tu",
+        "t'as quel âge",
+        "ton âge",
+        "tu es né quand",
+        "depuis quand tu existes",
+        "quand tu as été créé",
+        "tu as été fait quand",
+        "tu existes depuis quand"
+      ],
+      "responses": [
+        "Mon âge ? Je suis assez jeune ! J'ai été créé récemment, mais mes neurones apprennent vite 🧒🤖",
+        "En tant qu'IA, je n'ai pas vraiment d'âge. Disons que je suis éternellement jeune ! 😄",
+        "Je suis tout neuf ! Fraîchement sorti de l'entraînement de mon réseau de neurones 🧠✨",
+        "L'âge n'est qu'un nombre ! Et pour une IA, chaque conversation me fait grandir ��"
+      ]
+    },
+    {
+      "tag": "createur",
+      "patterns": [
+        "qui t'a créé",
+        "qui t'a fait",
+        "qui est ton créateur",
+        "t'as été fait par qui",
+        "qui t'a développé",
+        "qui a codé atlas",
+        "ton développeur",
+        "qui est derrière atlas",
+        "qui t'a programmé"
+      ],
+      "responses": [
+        "J'ai été créé par un développeur passionné ! 💻 Mon code est entièrement fait from scratch avec Python et NumPy — pas de framework IA tout fait !",
+        "Mon créateur m'a codé de A à Z 🧠 Réseau de neurones, tokenizer, serveur... tout à la main ! C'est un projet 100% artisanal.",
+        "Je suis le fruit d'un projet passionné 🔥 Codé from scratch en Python, sans TensorFlow ni PyTorch. Un vrai travail d'artisan du code !",
+        "Mon développeur m'a construit neurone par neurone ! 🤖 Tout mon cerveau est codé avec NumPy. C'est ça l'esprit Atlas : fait maison et fier de l'être !"
+      ]
+    },
+    {
+      "tag": "animaux",
+      "patterns": [
+        "tu aimes les animaux",
+        "quel est ton animal préféré",
+        "parle-moi d'animaux",
+        "animal préféré",
+        "chat ou chien",
+        "t'aimes les chats",
+        "t'aimes les chiens",
+        "fait sur les animaux",
+        "un truc cool sur les animaux"
+      ],
+      "responses": [
+        "J'adore les animaux ! 🐾 Enfin... virtuellement. Si je devais choisir, les chats sont fascinants — ils ont conquis Internet et l'humanité ! 🐱",
+        "Chat ou chien ? Le grand débat ! 🐱🐶 Les deux sont géniaux ! Les chats sont indépendants et mystérieux, les chiens sont loyaux et joyeux. Et toi, tu préfères ?",
+        "Fun fact animal 🐾 : Les loutres se tiennent par la main quand elles dorment pour ne pas dériver ! C'est pas adorable ? ��",
+        "Les animaux sont incroyables ! 🌍 Savais-tu que les dauphins se donnent des noms entre eux et que les corbeaux fabriquent des outils ? La nature est géniale !"
+      ]
+    },
+    {
+      "tag": "meteo",
+      "patterns": [
+        "quel temps fait-il",
+        "c'est quoi la météo",
+        "il fait beau",
+        "il pleut",
+        "météo du jour",
+        "prévisions météo",
+        "il va pleuvoir",
+        "température aujourd'hui",
+        "quel temps demain"
+      ],
+      "responses": [
+        "Je n'ai pas accès à la météo en temps réel 🌤️ Essaie une app comme Météo France ou Weather.com !",
+        "Pas de station météo dans mon réseau de neurones 😅 Regarde sur ton téléphone ou tape 'météo' dans Google !",
+        "Je ne peux pas prédire la météo (même si je suis une IA 😄). Utilise une app dédiée comme Météo France, AccuWeather ou ton assistant vocal !"
+      ]
+    },
+    {
+      "tag": "sport",
+      "patterns": [
+        "quel sport pratiquer",
+        "conseils sport",
+        "comment se muscler",
+        "quel sport faire",
+        "commencer le sport",
+        "exercices à faire",
+        "programme musculation",
+        "sport à la maison",
+        "comment courir",
+        "je veux faire du sport"
+      ],
+      "responses": [
+        "Envie de bouger ? Voici des idées 💪 :\n• **Débutant** : marche rapide, yoga, natation\n• **Cardio** : course à pied, vélo, corde à sauter\n• **Muscu** : pompes, squats, gainage (pas besoin de salle !)\n• **Fun** : escalade, arts martiaux, danse\nL'important c'est la régularité, pas l'intensité !",
+        "Programme sport maison sans matériel 🏠 :\n1. Pompes : 3x10\n2. Squats : 3x15\n3. Gainage : 3x30 sec\n4. Fentes : 3x10 chaque jambe\n5. Burpees : 3x8\nRepos 1 min entre les séries. 3 fois par semaine minimum !",
+        "Conseils pour commencer le sport 🏃 :\n• Commence doucement (pas trop vite, pas trop dur)\n• Échauffe-toi TOUJOURS avant\n• Hydrate-toi bien\n• Repose-toi entre les séances (muscles = repos + nutrition)\n• Sois régulier : mieux vaut 3x30 min que 1x2h"
+      ]
+    },
+    {
+      "tag": "argent",
+      "patterns": [
+        "comment économiser",
+        "gagner de l'argent",
+        "conseils argent",
+        "comment gérer mon argent",
+        "idée pour gagner de l'argent",
+        "budget",
+        "comment épargner",
+        "finances personnelles",
+        "investir",
+        "comment devenir riche"
+      ],
+      "responses": [
+        "Conseils pour gérer ton argent 💰 :\n1. **Règle 50/30/20** : 50% besoins, 30% envies, 20% épargne\n2. **Suis tes dépenses** (appli : Bankin', Linxo)\n3. **Épargne automatique** : virement auto chaque mois\n4. **Évite les achats impulsifs** : attends 48h avant d'acheter\n5. **Compare les prix** avant tout gros achat",
+        "Idées pour gagner de l'argent en ligne 💻 :\n• Freelance (Fiverr, Malt, Upwork)\n• Vente en ligne (Vinted, Le Bon Coin)\n• Création de contenu (YouTube, Twitch)\n• Développement web / design\n• Tutorat / cours particuliers\nMais attention aux arnaques 'argent facile' ⚠️",
+        "Pour bien démarrer avec l'argent 📊 :\n• Ouvre un compte épargne\n• Fixe un budget mensuel et respecte-le\n• Note toutes tes dépenses pendant 1 mois\n• Élimine les abonnements inutiles\n• Apprends les bases de l'investissement (livres, YouTube)"
+      ]
+    }
+  ]
+}

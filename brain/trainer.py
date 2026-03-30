@@ -1,7 +1,7 @@
 """
 Module d'entraînement d'Atlas.
 Charge les données depuis data/intents.json,
-prépare les vecteurs BoW et entraîne le réseau de neurones.
+prépare les vecteurs BoW et entraîne le réseau de neurones amélioré.
 """
 
 import json
@@ -15,6 +15,7 @@ from brain.tokenizer import Tokenizer
 class Trainer:
     """
     Orchestre la préparation des données et l'entraînement du réseau neuronal d'Atlas.
+    Supporte l'architecture améliorée 3-couches cachées + Adam + Dropout + mini-batch.
     """
 
     def __init__(
@@ -22,27 +23,36 @@ class Trainer:
         chemin_intents="data/intents.json",
         chemin_modele="brain/model.json",
         chemin_vocab="data/vocabulary.json",
-        taille_cachee1=128,
-        taille_cachee2=64,
-        taux_apprentissage=0.01,
-        epochs=5000,
+        taille_cachee1=256,
+        taille_cachee2=128,
+        taille_cachee3=64,
+        taux_apprentissage=0.001,
+        taux_dropout=0.2,
+        epochs=3000,
+        taille_batch=32,
     ):
         """
-        :param chemin_intents:      Chemin vers la base de connaissances
-        :param chemin_modele:       Chemin de sauvegarde du modèle
-        :param chemin_vocab:        Chemin de sauvegarde du vocabulaire
-        :param taille_cachee1:      Neurones de la 1ère couche cachée
-        :param taille_cachee2:      Neurones de la 2ème couche cachée
-        :param taux_apprentissage:  Learning rate
-        :param epochs:              Nombre d'epochs d'entraînement
+        :param chemin_intents:    Chemin vers la base de connaissances
+        :param chemin_modele:     Chemin de sauvegarde du modèle
+        :param chemin_vocab:      Chemin de sauvegarde du vocabulaire
+        :param taille_cachee1:    Neurones de la 1ère couche cachée (256)
+        :param taille_cachee2:    Neurones de la 2ème couche cachée (128)
+        :param taille_cachee3:    Neurones de la 3ème couche cachée (64, None=désactivée)
+        :param taux_apprentissage: Learning rate Adam (0.001 recommandé)
+        :param taux_dropout:      Taux de dropout (0.0–0.5)
+        :param epochs:            Nombre d'epochs
+        :param taille_batch:      Taille des mini-batchs (0 = batch complet)
         """
         self.chemin_intents = chemin_intents
         self.chemin_modele = chemin_modele
         self.chemin_vocab = chemin_vocab
         self.taille_cachee1 = taille_cachee1
         self.taille_cachee2 = taille_cachee2
+        self.taille_cachee3 = taille_cachee3
         self.taux_apprentissage = taux_apprentissage
+        self.taux_dropout = taux_dropout
         self.epochs = epochs
+        self.taille_batch = taille_batch
 
         self.tokenizer = Tokenizer()
         self.intents = []
@@ -117,11 +127,24 @@ class Trainer:
             taille_cachee1=self.taille_cachee1,
             taille_cachee2=self.taille_cachee2,
             taille_sortie=taille_sortie,
+            taille_cachee3=self.taille_cachee3,
             taux_apprentissage=self.taux_apprentissage,
+            taux_dropout=self.taux_dropout,
         )
 
-        print(f"\n🚀 Entraînement démarré ({self.epochs} epochs)...\n")
-        self.reseau.entrainer(self.X_train, self.y_train, epochs=self.epochs)
+        couches_str = f"{taille_entree}→{self.taille_cachee1}→{self.taille_cachee2}"
+        if self.taille_cachee3:
+            couches_str += f"→{self.taille_cachee3}"
+        couches_str += f"→{taille_sortie}"
+
+        print(f"\n🚀 Entraînement démarré ({self.epochs} epochs, batch={self.taille_batch})...")
+        print(f"   Architecture : {couches_str}")
+        print(f"   Optimiseur : Adam (lr={self.taux_apprentissage}), Dropout={self.taux_dropout}\n")
+        self.reseau.entrainer(
+            self.X_train, self.y_train,
+            epochs=self.epochs,
+            taille_batch=self.taille_batch,
+        )
 
     # ─────────────────────────────────────────────────
     # Sauvegarde

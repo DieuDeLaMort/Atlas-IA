@@ -1,7 +1,9 @@
 """
 Réseau de neurones multi-couches implémenté from scratch avec NumPy uniquement.
-Architecture : input → hidden1 → hidden2 → output
+Architecture : input → hidden1 → hidden2 → hidden3 → output
 Activation    : ReLU pour les couches cachées, Softmax pour la sortie
+Optimiseur    : Adam (Adaptive Moment Estimation) — bien meilleur que le SGD simple
+Régularisation: Dropout pendant l'entraînement pour éviter l'overfitting
 """
 
 import json
@@ -10,43 +12,93 @@ import numpy as np
 
 class ReseauNeuronal:
     """
-    Réseau de neurones entièrement codé from scratch.
+    Réseau de neurones 4 couches codé from scratch.
+    Architecture améliorée : 3 couches cachées + optimiseur Adam + Dropout.
     Pas de TensorFlow, pas de PyTorch — uniquement NumPy.
     """
 
-    def __init__(self, taille_entree, taille_cachee1, taille_cachee2, taille_sortie, taux_apprentissage=0.01):
+    VERSION = "2.0"
+
+    def __init__(
+        self,
+        taille_entree,
+        taille_cachee1,
+        taille_cachee2,
+        taille_sortie,
+        taille_cachee3=None,
+        taux_apprentissage=0.001,
+        taux_dropout=0.2,
+    ):
         """
         Initialise le réseau avec des poids aléatoires (He initialization).
 
-        :param taille_entree:   Nombre de neurones d'entrée (taille du vecteur bag-of-words)
-        :param taille_cachee1:  Nombre de neurones dans la première couche cachée
-        :param taille_cachee2:  Nombre de neurones dans la deuxième couche cachée
-        :param taille_sortie:   Nombre de neurones de sortie (nombre d'intents)
-        :param taux_apprentissage: Learning rate pour la descente de gradient
+        :param taille_entree:    Nombre de neurones d'entrée (taille du vecteur bag-of-words)
+        :param taille_cachee1:   Neurones dans la 1ère couche cachée
+        :param taille_cachee2:   Neurones dans la 2ème couche cachée
+        :param taille_sortie:    Nombre de neurones de sortie (nombre d'intents)
+        :param taille_cachee3:   Neurones dans la 3ème couche cachée (None = désactivée)
+        :param taux_apprentissage: Learning rate pour Adam
+        :param taux_dropout:     Probabilité de désactivation des neurones (0 = pas de dropout)
         """
         self.taille_entree = taille_entree
         self.taille_cachee1 = taille_cachee1
         self.taille_cachee2 = taille_cachee2
+        self.taille_cachee3 = taille_cachee3
         self.taille_sortie = taille_sortie
         self.taux_apprentissage = taux_apprentissage
+        self.taux_dropout = taux_dropout
+        self.trois_couches = taille_cachee3 is not None and taille_cachee3 > 0
 
-        # Initialisation des poids avec He initialization (adapté pour ReLU)
+        # ── Initialisation He pour ReLU ──
         self.poids1 = np.random.randn(taille_entree, taille_cachee1) * np.sqrt(2.0 / taille_entree)
         self.biais1 = np.zeros((1, taille_cachee1))
 
         self.poids2 = np.random.randn(taille_cachee1, taille_cachee2) * np.sqrt(2.0 / taille_cachee1)
         self.biais2 = np.zeros((1, taille_cachee2))
 
-        self.poids3 = np.random.randn(taille_cachee2, taille_sortie) * np.sqrt(2.0 / taille_cachee2)
-        self.biais3 = np.zeros((1, taille_sortie))
+        if self.trois_couches:
+            self.poids3 = np.random.randn(taille_cachee2, taille_cachee3) * np.sqrt(2.0 / taille_cachee2)
+            self.biais3 = np.zeros((1, taille_cachee3))
+            self.poids4 = np.random.randn(taille_cachee3, taille_sortie) * np.sqrt(2.0 / taille_cachee3)
+            self.biais4 = np.zeros((1, taille_sortie))
+        else:
+            self.poids3 = np.random.randn(taille_cachee2, taille_sortie) * np.sqrt(2.0 / taille_cachee2)
+            self.biais3 = np.zeros((1, taille_sortie))
+            self.poids4 = None
+            self.biais4 = None
 
-        # Stockage des activations pour la rétropropagation
-        self.z1 = None
-        self.a1 = None
-        self.z2 = None
-        self.a2 = None
-        self.z3 = None
-        self.a3 = None
+        # ── Moments Adam (premier et second) pour chaque paramètre ──
+        self._init_adam()
+
+        # ── Stockage des activations pour la rétropropagation ──
+        self.z1 = self.a1 = None
+        self.z2 = self.a2 = None
+        self.z3 = self.a3 = None
+        self.z4 = self.a4 = None
+        self.masque_dropout1 = self.masque_dropout2 = self.masque_dropout3 = None
+
+        # Compteur d'étapes pour Adam (correction du biais)
+        self._t = 0
+
+    def _init_adam(self):
+        """Initialise les moments Adam à zéro pour tous les poids."""
+        self._m = {}
+        self._v = {}
+        for nom, p in self._params():
+            self._m[nom] = np.zeros_like(p)
+            self._v[nom] = np.zeros_like(p)
+
+    def _params(self):
+        """Itère sur tous les paramètres (nom, tableau) du réseau."""
+        yield "poids1", self.poids1
+        yield "biais1", self.biais1
+        yield "poids2", self.poids2
+        yield "biais2", self.biais2
+        yield "poids3", self.poids3
+        yield "biais3", self.biais3
+        if self.trois_couches:
+            yield "poids4", self.poids4
+            yield "biais4", self.biais4
 
     # ─────────────────────────────────────────────────
     # Fonctions d'activation
@@ -61,38 +113,60 @@ class ReseauNeuronal:
         return (x > 0).astype(float)
 
     def softmax(self, x):
-        """
-        Fonction Softmax stable numériquement.
-        Transforme les scores bruts en probabilités.
-        """
-        # Soustraction du maximum pour la stabilité numérique
+        """Softmax stable numériquement — transforme les scores en probabilités."""
         exp_x = np.exp(x - np.max(x, axis=1, keepdims=True))
         return exp_x / np.sum(exp_x, axis=1, keepdims=True)
+
+    def _dropout(self, a, taux, entrainement):
+        """
+        Applique le dropout inverted pendant l'entraînement.
+
+        :param a:            Activation (n, d)
+        :param taux:         Probabilité de mise à zéro
+        :param entrainement: True pendant l'entraînement, False à l'inférence
+        :return:             (activation_masquee, masque) — masque=None à l'inférence
+        """
+        if not entrainement or taux == 0.0:
+            return a, None
+        masque = (np.random.rand(*a.shape) > taux).astype(float)
+        return a * masque / (1.0 - taux), masque
 
     # ─────────────────────────────────────────────────
     # Propagation avant (Forward Pass)
     # ─────────────────────────────────────────────────
 
-    def forward(self, X):
+    def forward(self, X, entrainement=False):
         """
         Calcule la sortie du réseau pour une entrée X.
 
-        :param X: Matrice d'entrée de forme (n_echantillons, taille_entree)
-        :return:  Probabilités de forme (n_echantillons, taille_sortie)
+        :param X:            Matrice d'entrée (n_echantillons, taille_entree)
+        :param entrainement: Active le dropout si True
+        :return:             Probabilités (n_echantillons, taille_sortie)
         """
         # Couche 1 : input → hidden1
         self.z1 = np.dot(X, self.poids1) + self.biais1
-        self.a1 = self.relu(self.z1)
+        a1_raw = self.relu(self.z1)
+        self.a1, self.masque_dropout1 = self._dropout(a1_raw, self.taux_dropout, entrainement)
 
         # Couche 2 : hidden1 → hidden2
         self.z2 = np.dot(self.a1, self.poids2) + self.biais2
-        self.a2 = self.relu(self.z2)
+        a2_raw = self.relu(self.z2)
+        self.a2, self.masque_dropout2 = self._dropout(a2_raw, self.taux_dropout, entrainement)
 
-        # Couche 3 : hidden2 → output
-        self.z3 = np.dot(self.a2, self.poids3) + self.biais3
-        self.a3 = self.softmax(self.z3)
-
-        return self.a3
+        if self.trois_couches:
+            # Couche 3 : hidden2 → hidden3
+            self.z3 = np.dot(self.a2, self.poids3) + self.biais3
+            a3_raw = self.relu(self.z3)
+            self.a3, self.masque_dropout3 = self._dropout(a3_raw, self.taux_dropout, entrainement)
+            # Couche 4 : hidden3 → output
+            self.z4 = np.dot(self.a3, self.poids4) + self.biais4
+            self.a4 = self.softmax(self.z4)
+            return self.a4
+        else:
+            # Couche 3 (sortie) : hidden2 → output
+            self.z3 = np.dot(self.a2, self.poids3) + self.biais3
+            self.a3 = self.softmax(self.z3)
+            return self.a3
 
     # ─────────────────────────────────────────────────
     # Fonction de perte (Cross-Entropy Loss)
@@ -107,80 +181,131 @@ class ReseauNeuronal:
         :return:       Valeur scalaire de la perte
         """
         n = y_reel.shape[0]
-        # Clip pour éviter log(0)
         y_pred_clip = np.clip(y_pred, 1e-12, 1.0)
-        perte = -np.sum(y_reel * np.log(y_pred_clip)) / n
-        return perte
+        return -np.sum(y_reel * np.log(y_pred_clip)) / n
 
     # ─────────────────────────────────────────────────
-    # Rétropropagation (Backward Pass)
+    # Rétropropagation + mise à jour Adam
     # ─────────────────────────────────────────────────
 
     def backward(self, X, y_reel):
         """
-        Calcule les gradients et met à jour les poids via descente de gradient.
+        Calcule les gradients et met à jour les poids via Adam.
 
         :param X:      Matrice d'entrée (n_echantillons, taille_entree)
         :param y_reel: Labels one-hot (n_echantillons, n_classes)
         """
         n = X.shape[0]
+        gradients = {}
 
-        # ── Gradient de la couche de sortie (Softmax + Cross-Entropy) ──
-        # La dérivée combinée Softmax + CrossEntropy est simplement : a3 - y
-        dz3 = (self.a3 - y_reel) / n
+        if self.trois_couches:
+            # ── Sortie : hidden3 → output ──
+            dz4 = (self.a4 - y_reel) / n
+            gradients["poids4"] = np.dot(self.a3.T, dz4)
+            gradients["biais4"] = np.sum(dz4, axis=0, keepdims=True)
 
-        dpoids3 = np.dot(self.a2.T, dz3)
-        dbiais3 = np.sum(dz3, axis=0, keepdims=True)
+            # ── Couche cachée 3 ──
+            da3 = np.dot(dz4, self.poids4.T)
+            if self.masque_dropout3 is not None:
+                da3 = da3 * self.masque_dropout3 / (1.0 - self.taux_dropout)
+            dz3 = da3 * self.relu_derivee(self.z3)
+            gradients["poids3"] = np.dot(self.a2.T, dz3)
+            gradients["biais3"] = np.sum(dz3, axis=0, keepdims=True)
 
-        # ── Gradient couche cachée 2 ──
-        da2 = np.dot(dz3, self.poids3.T)
-        dz2 = da2 * self.relu_derivee(self.z2)
+            # ── Couche cachée 2 ──
+            da2 = np.dot(dz3, self.poids3.T)
+            if self.masque_dropout2 is not None:
+                da2 = da2 * self.masque_dropout2 / (1.0 - self.taux_dropout)
+            dz2 = da2 * self.relu_derivee(self.z2)
+            gradients["poids2"] = np.dot(self.a1.T, dz2)
+            gradients["biais2"] = np.sum(dz2, axis=0, keepdims=True)
 
-        dpoids2 = np.dot(self.a1.T, dz2)
-        dbiais2 = np.sum(dz2, axis=0, keepdims=True)
+            # ── Couche cachée 1 ──
+            da1 = np.dot(dz2, self.poids2.T)
+            if self.masque_dropout1 is not None:
+                da1 = da1 * self.masque_dropout1 / (1.0 - self.taux_dropout)
+            dz1 = da1 * self.relu_derivee(self.z1)
+            gradients["poids1"] = np.dot(X.T, dz1)
+            gradients["biais1"] = np.sum(dz1, axis=0, keepdims=True)
+        else:
+            # ── Sortie : hidden2 → output ──
+            dz3 = (self.a3 - y_reel) / n
+            gradients["poids3"] = np.dot(self.a2.T, dz3)
+            gradients["biais3"] = np.sum(dz3, axis=0, keepdims=True)
 
-        # ── Gradient couche cachée 1 ──
-        da1 = np.dot(dz2, self.poids2.T)
-        dz1 = da1 * self.relu_derivee(self.z1)
+            # ── Couche cachée 2 ──
+            da2 = np.dot(dz3, self.poids3.T)
+            if self.masque_dropout2 is not None:
+                da2 = da2 * self.masque_dropout2 / (1.0 - self.taux_dropout)
+            dz2 = da2 * self.relu_derivee(self.z2)
+            gradients["poids2"] = np.dot(self.a1.T, dz2)
+            gradients["biais2"] = np.sum(dz2, axis=0, keepdims=True)
 
-        dpoids1 = np.dot(X.T, dz1)
-        dbiais1 = np.sum(dz1, axis=0, keepdims=True)
+            # ── Couche cachée 1 ──
+            da1 = np.dot(dz2, self.poids2.T)
+            if self.masque_dropout1 is not None:
+                da1 = da1 * self.masque_dropout1 / (1.0 - self.taux_dropout)
+            dz1 = da1 * self.relu_derivee(self.z1)
+            gradients["poids1"] = np.dot(X.T, dz1)
+            gradients["biais1"] = np.sum(dz1, axis=0, keepdims=True)
 
-        # ── Mise à jour des poids (descente de gradient) ──
-        self.poids3 -= self.taux_apprentissage * dpoids3
-        self.biais3 -= self.taux_apprentissage * dbiais3
+        # ── Mise à jour Adam ──
+        self._t += 1
+        beta1, beta2, eps = 0.9, 0.999, 1e-8
+        lr_t = self.taux_apprentissage * np.sqrt(1 - beta2 ** self._t) / (1 - beta1 ** self._t)
 
-        self.poids2 -= self.taux_apprentissage * dpoids2
-        self.biais2 -= self.taux_apprentissage * dbiais2
+        params_dict = dict(self._params())
+        for nom, grad in gradients.items():
+            self._m[nom] = beta1 * self._m[nom] + (1 - beta1) * grad
+            self._v[nom] = beta2 * self._v[nom] + (1 - beta2) * grad ** 2
+            params_dict[nom] -= lr_t * self._m[nom] / (np.sqrt(self._v[nom]) + eps)
 
-        self.poids1 -= self.taux_apprentissage * dpoids1
-        self.biais1 -= self.taux_apprentissage * dbiais1
+        # Ré-assigner (numpy arrays sont mutés in-place via -= mais on s'assure de la cohérence)
+        self.poids1 = params_dict["poids1"]
+        self.biais1 = params_dict["biais1"]
+        self.poids2 = params_dict["poids2"]
+        self.biais2 = params_dict["biais2"]
+        self.poids3 = params_dict["poids3"]
+        self.biais3 = params_dict["biais3"]
+        if self.trois_couches:
+            self.poids4 = params_dict["poids4"]
+            self.biais4 = params_dict["biais4"]
 
     # ─────────────────────────────────────────────────
     # Entraînement
     # ─────────────────────────────────────────────────
 
-    def entrainer(self, X, y, epochs=1000, afficher_progression=True):
+    def entrainer(self, X, y, epochs=1000, taille_batch=32, afficher_progression=True):
         """
-        Entraîne le réseau sur les données fournies.
+        Entraîne le réseau sur les données avec mini-batch Adam.
 
-        :param X:                  Données d'entrée (n_echantillons, taille_entree)
-        :param y:                  Labels one-hot (n_echantillons, n_classes)
-        :param epochs:             Nombre d'epochs d'entraînement
+        :param X:                    Données d'entrée (n_echantillons, taille_entree)
+        :param y:                    Labels one-hot (n_echantillons, n_classes)
+        :param epochs:               Nombre d'epochs d'entraînement
+        :param taille_batch:         Taille des mini-batchs (0 = batch complet)
         :param afficher_progression: Affiche la perte/précision toutes les 100 epochs
         """
+        n = X.shape[0]
+        batch = taille_batch if taille_batch > 0 else n
+
         for epoch in range(epochs):
-            # Propagation avant
-            y_pred = self.forward(X)
+            # Mélange des données à chaque epoch
+            indices = np.random.permutation(n)
+            X_shuffle = X[indices]
+            y_shuffle = y[indices]
 
-            # Calcul de la perte
-            perte = self.calculer_perte(y_pred, y)
+            # Mini-batchs
+            for debut in range(0, n, batch):
+                fin = min(debut + batch, n)
+                X_batch = X_shuffle[debut:fin]
+                y_batch = y_shuffle[debut:fin]
+                self.forward(X_batch, entrainement=True)
+                self.backward(X_batch, y_batch)
 
-            # Rétropropagation
-            self.backward(X, y)
-
-            # Affichage de la progression
+            # Affichage de la progression (évaluation sur tout le set, sans dropout)
             if afficher_progression and (epoch + 1) % 100 == 0:
+                y_pred = self.forward(X, entrainement=False)
+                perte = self.calculer_perte(y_pred, y)
                 predictions = np.argmax(y_pred, axis=1)
                 labels_reels = np.argmax(y, axis=1)
                 precision = np.mean(predictions == labels_reels) * 100
@@ -192,12 +317,12 @@ class ReseauNeuronal:
 
     def predire(self, X):
         """
-        Prédit la classe pour un vecteur d'entrée X.
+        Prédit la classe pour un vecteur d'entrée X (sans dropout).
 
         :param X: Vecteur d'entrée (1, taille_entree)
-        :return:  (indice_classe, confiance) — indice de l'intent prédit et probabilité
+        :return:  (indice_classe, confiance)
         """
-        probabilites = self.forward(X)
+        probabilites = self.forward(X, entrainement=False)
         indice = int(np.argmax(probabilites))
         confiance = float(probabilites[0][indice])
         return indice, confiance
@@ -207,18 +332,17 @@ class ReseauNeuronal:
     # ─────────────────────────────────────────────────
 
     def sauvegarder(self, chemin="brain/model.json"):
-        """
-        Sauvegarde tous les poids et biais du réseau dans un fichier JSON.
-
-        :param chemin: Chemin du fichier de sauvegarde
-        """
+        """Sauvegarde tous les poids et biais dans un fichier JSON."""
         modele = {
+            "version": self.VERSION,
             "architecture": {
                 "taille_entree": self.taille_entree,
                 "taille_cachee1": self.taille_cachee1,
                 "taille_cachee2": self.taille_cachee2,
+                "taille_cachee3": self.taille_cachee3,
                 "taille_sortie": self.taille_sortie,
-                "taux_apprentissage": self.taux_apprentissage
+                "taux_apprentissage": self.taux_apprentissage,
+                "taux_dropout": self.taux_dropout,
             },
             "poids": {
                 "poids1": self.poids1.tolist(),
@@ -226,31 +350,32 @@ class ReseauNeuronal:
                 "poids2": self.poids2.tolist(),
                 "biais2": self.biais2.tolist(),
                 "poids3": self.poids3.tolist(),
-                "biais3": self.biais3.tolist()
-            }
+                "biais3": self.biais3.tolist(),
+            },
         }
+        if self.trois_couches:
+            modele["poids"]["poids4"] = self.poids4.tolist()
+            modele["poids"]["biais4"] = self.biais4.tolist()
+
         with open(chemin, "w", encoding="utf-8") as f:
             json.dump(modele, f, ensure_ascii=False, indent=2)
-        print(f"✅ Modèle sauvegardé dans '{chemin}'")
+        print(f"✅ Modèle v{self.VERSION} sauvegardé dans '{chemin}'")
 
     def charger(self, chemin="brain/model.json"):
-        """
-        Charge les poids depuis un fichier JSON.
-
-        :param chemin: Chemin du fichier de sauvegarde
-        """
+        """Charge les poids depuis un fichier JSON."""
         with open(chemin, "r", encoding="utf-8") as f:
             modele = json.load(f)
 
-        # Restaurer l'architecture
         arch = modele["architecture"]
         self.taille_entree = arch["taille_entree"]
         self.taille_cachee1 = arch["taille_cachee1"]
         self.taille_cachee2 = arch["taille_cachee2"]
+        self.taille_cachee3 = arch.get("taille_cachee3", None)
         self.taille_sortie = arch["taille_sortie"]
         self.taux_apprentissage = arch["taux_apprentissage"]
+        self.taux_dropout = arch.get("taux_dropout", 0.0)
+        self.trois_couches = self.taille_cachee3 is not None and self.taille_cachee3 > 0
 
-        # Restaurer les poids
         poids = modele["poids"]
         self.poids1 = np.array(poids["poids1"])
         self.biais1 = np.array(poids["biais1"])
@@ -258,5 +383,15 @@ class ReseauNeuronal:
         self.biais2 = np.array(poids["biais2"])
         self.poids3 = np.array(poids["poids3"])
         self.biais3 = np.array(poids["biais3"])
+        if self.trois_couches and "poids4" in poids:
+            self.poids4 = np.array(poids["poids4"])
+            self.biais4 = np.array(poids["biais4"])
+        else:
+            self.poids4 = None
+            self.biais4 = None
 
-        print(f"✅ Modèle chargé depuis '{chemin}'")
+        self._init_adam()
+        self._t = 0
+
+        version = modele.get("version", "1.0")
+        print(f"✅ Modèle v{version} chargé depuis '{chemin}'")

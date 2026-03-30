@@ -1,14 +1,17 @@
 """
-Point d'entrée principal d'Atlas.
+Point d'entrée principal d'Atlas v2.0.
 Lance : python main.py
 
-1. Vérifie si le modèle est entraîné
-2. Si non, lance l'entraînement automatiquement
-3. Lance le serveur Flask
+1. Affiche la bannière de démarrage
+2. Vérifie si le modèle est à jour par rapport aux intents
+3. Lance l'entraînement automatiquement si nécessaire
+4. Lance le serveur Flask
 
 Un système de logs enregistre les erreurs et crashs dans logs/atlas.log.
 """
 
+import hashlib
+import json
 import logging
 import os
 import sys
@@ -41,7 +44,35 @@ logging.basicConfig(
 
 logger = logging.getLogger("atlas")
 
+ATLAS_VERSION = "2.0.0"
 CHEMIN_MODELE = os.path.join("brain", "model.json")
+CHEMIN_INTENTS = os.path.join("data", "intents.json")
+CHEMIN_HASH = os.path.join("brain", "intents.hash")
+
+
+# ─────────────────────────────────────────────────
+# Bannière ASCII
+# ─────────────────────────────────────────────────
+
+
+def afficher_banniere():
+    """Affiche la bannière ASCII d'Atlas au démarrage."""
+    banniere = f"""
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║     ██████╗████████╗██╗      █████╗ ███████╗                ║
+║    ██╔══██╗╚══██╔══╝██║     ██╔══██╗██╔════╝                ║
+║    ███████║   ██║   ██║     ███████║███████╗                 ║
+║    ██╔══██║   ██║   ██║     ██╔══██║╚════██║                 ║
+║    ██║  ██║   ██║   ███████╗██║  ██║███████║                 ║
+║    ╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚══════╝                ║
+║                                                              ║
+║          Intelligence Artificielle — v{ATLAS_VERSION}              ║
+║          Réseau neuronal 100% from scratch (NumPy)           ║
+║          Optimiseur : Adam | Architecture : 4 couches        ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝"""
+    print(banniere)
 
 
 # ─────────────────────────────────────────────────
@@ -57,11 +88,7 @@ def detecter_host_port():
     SERVER_IP est utilisé uniquement pour l'affichage dans les logs.
     Ne crash jamais : retourne les valeurs par défaut en cas de problème.
     """
-    # Bind address : toujours 0.0.0.0 dans un conteneur Pterodactyl.
-    # SERVER_IP est l'IP externe — on ne peut pas binder dessus depuis l'intérieur.
     bind_host = os.environ.get("HOST", "0.0.0.0")
-
-    # IP affichée dans les logs (SERVER_IP si disponible, sinon bind_host)
     display_host = os.environ.get("SERVER_IP") or bind_host
 
     port_str = os.environ.get("SERVER_PORT") or os.environ.get("PORT", "7778")
@@ -77,40 +104,100 @@ def detecter_host_port():
 
 
 # ─────────────────────────────────────────────────
+# Gestion du hash des intents (détection de changement)
+# ─────────────────────────────────────────────────
+
+
+def _hash_intents():
+    """Calcule le hash MD5 du fichier intents.json."""
+    try:
+        with open(CHEMIN_INTENTS, "rb") as f:
+            return hashlib.md5(f.read()).hexdigest()
+    except OSError:
+        return None
+
+
+def modele_est_a_jour():
+    """
+    Vérifie si le modèle sauvegardé correspond aux intents actuels.
+    Retourne False si le modèle est absent, vide, ou si les intents ont changé.
+    """
+    if not os.path.isfile(CHEMIN_MODELE):
+        return False
+    try:
+        taille = os.path.getsize(CHEMIN_MODELE)
+        if taille == 0:
+            return False
+    except OSError:
+        return False
+
+    hash_actuel = _hash_intents()
+    if hash_actuel is None:
+        return True  # pas d'intents = pas besoin de ré-entraîner
+
+    if os.path.isfile(CHEMIN_HASH):
+        try:
+            with open(CHEMIN_HASH, "r") as f:
+                hash_sauvegarde = f.read().strip()
+            return hash_sauvegarde == hash_actuel
+        except OSError:
+            pass
+    return False  # pas de hash = modèle potentiellement périmé
+
+
+def sauvegarder_hash_intents():
+    """Sauvegarde le hash courant du fichier intents.json."""
+    hash_actuel = _hash_intents()
+    if hash_actuel:
+        os.makedirs(os.path.dirname(CHEMIN_HASH) or ".", exist_ok=True)
+        with open(CHEMIN_HASH, "w") as f:
+            f.write(hash_actuel)
+
+
+# ─────────────────────────────────────────────────
 # Entraînement du modèle
 # ─────────────────────────────────────────────────
 
 
 def entrainer_modele():
-    """Lance l'entraînement si le modèle n'existe pas. Retourne True si OK."""
-    if os.path.isfile(CHEMIN_MODELE):
-        # Vérifier que le fichier est lisible et non vide
+    """Lance l'entraînement si le modèle n'est pas à jour. Retourne True si OK."""
+    if modele_est_a_jour():
         try:
             taille = os.path.getsize(CHEMIN_MODELE)
-            if taille == 0:
-                logger.warning("Fichier modèle vide (%s). Ré-entraînement nécessaire.", CHEMIN_MODELE)
-            else:
-                logger.info("Modèle trouvé : %s (%d octets)", CHEMIN_MODELE, taille)
-                return True
+            logger.info("✅ Modèle à jour : %s (%d octets)", CHEMIN_MODELE, taille)
+            return True
         except OSError as e:
-            logger.warning("Impossible de lire le modèle (%s) : %s", CHEMIN_MODELE, e)
+            logger.warning("Impossible de lire le modèle : %s", e)
 
-    logger.info("Modèle non trouvé. Lancement de l'entraînement...")
+    logger.info("🔄 Modèle absent ou périmé — lancement de l'entraînement...")
+
+    # Compter les intents pour affichage
+    try:
+        with open(CHEMIN_INTENTS, "r", encoding="utf-8") as f:
+            donnees = json.load(f)
+        nb_intents = len(donnees.get("intents", []))
+        logger.info("📚 Base de connaissances : %d intents", nb_intents)
+    except Exception:
+        nb_intents = "?"
 
     try:
         from brain.trainer import Trainer
 
         trainer = Trainer(
-            chemin_intents="data/intents.json",
-            chemin_modele="brain/model.json",
+            chemin_intents=CHEMIN_INTENTS,
+            chemin_modele=CHEMIN_MODELE,
             chemin_vocab="data/vocabulary.json",
-            taille_cachee1=128,
-            taille_cachee2=64,
-            taux_apprentissage=0.01,
-            epochs=5000,
+            taille_cachee1=256,
+            taille_cachee2=128,
+            taille_cachee3=64,
+            taux_apprentissage=0.001,
+            taux_dropout=0.2,
+            epochs=3000,
+            taille_batch=32,
         )
         trainer.lancer()
-        logger.info("Entraînement terminé avec succès !")
+        sauvegarder_hash_intents()
+        logger.info("✅ Entraînement terminé avec succès !")
         return True
     except Exception:
         logger.error("Erreur lors de l'entraînement :\n%s", traceback.format_exc())
@@ -133,12 +220,11 @@ def lancer_serveur():
     host, port, display_host = detecter_host_port()
     debug = os.environ.get("FLASK_DEBUG", "false").lower() == "true"
 
-    logger.info("Atlas démarre sur %s:%d (bind: %s) ...", display_host, port, host)
+    logger.info("🌐 Atlas démarre sur %s:%d (bind: %s) ...", display_host, port, host)
 
     try:
         app.run(host=host, port=port, debug=debug)
     except OSError as e:
-        # Port déjà utilisé, permission refusée, etc.
         logger.error("Impossible de démarrer le serveur sur %s:%d — %s", display_host, port, e)
         return False
     except Exception:
@@ -154,13 +240,13 @@ def lancer_serveur():
 
 
 def main():
-    logger.info("==============================================")
-    logger.info("      🤖 Atlas — Démarrage")
+    afficher_banniere()
+    logger.info("Atlas v%s — Démarrage", ATLAS_VERSION)
     logger.info("==============================================")
 
     # Étape 1 : entraînement si nécessaire
     if not entrainer_modele():
-        logger.error("Arrêt : l'entraînement a échoué.")
+        logger.error("❌ Arrêt : l'entraînement a échoué.")
         return 1
 
     logger.info("🚀 Lancement du serveur Flask...")
@@ -168,7 +254,7 @@ def main():
 
     # Étape 2 : lancement du serveur
     if not lancer_serveur():
-        logger.error("Arrêt : le serveur n'a pas pu démarrer.")
+        logger.error("❌ Arrêt : le serveur n'a pas pu démarrer.")
         return 1
 
     return 0
