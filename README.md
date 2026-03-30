@@ -10,11 +10,14 @@ Il dispose d'une interface web moderne (thème dark) et peut être hébergé sur
 
 - 🧠 Réseau de neurones multi-couches (backpropagation complète)
 - 📝 Tokenizer maison avec stemming français/anglais
-- 💬 Conversations en français sur de nombreux sujets :
-  - Assistant général (salutations, présentation, aide...)
-  - Support technique (PC lent, connexion, mots de passe...)
-  - Gaming (Minecraft, lag, recommandations...)
-  - Fun (blagues, fun facts, citations...)
+- 💬 Conversations en français sur 36 sujets :
+  - Assistant général (salutations, présentation, aide, âge, créateur...)
+  - Support technique (PC lent, connexion, mots de passe, bugs, sécurité...)
+  - Gaming (Minecraft, lag, recommandations, meilleurs jeux, setup...)
+  - Divertissement (blagues, fun facts, citations, philosophie...)
+  - Culture (musique, films & séries, animaux...)
+  - Lifestyle (programmation, apprentissage, santé, cuisine, sport, argent...)
+  - Modération (gestion des insultes)
 - 🌐 Interface web dark & responsive
 - 🐳 Prêt pour Pterodactyl (Dockerfile + start.sh)
 
@@ -29,6 +32,7 @@ Atlas-IA/
 │   ├── neural_network.py    # Réseau de neurones from scratch (NumPy)
 │   ├── tokenizer.py         # Tokenizer maison (bag of words + stemming)
 │   ├── trainer.py           # Entraînement du modèle
+│   ├── web_search.py        # Recherche web (DuckDuckGo + Wikipedia)
 │   ├── model.json           # Poids sauvegardés (généré après train.py)
 │   └── classes.json         # Liste des intents (généré après train.py)
 ├── data/
@@ -99,7 +103,7 @@ chmod +x start.sh
 
 ### 5. Ouvrir l'interface
 
-Ouvre [http://localhost:5000](http://localhost:5000) dans ton navigateur et parle à Atlas ! 🤖
+Ouvre [http://localhost:7778](http://localhost:7778) dans ton navigateur et parle à Atlas ! 🤖
 
 ---
 
@@ -109,20 +113,23 @@ Ouvre [http://localhost:5000](http://localhost:5000) dans ton navigateur et parl
 
 ```bash
 docker build -t atlas-ia .
-docker run -p 5000:5000 atlas-ia
+docker run -p 7778:7778 atlas-ia
 ```
 
 ### Option 2 — Pterodactyl
 
 1. Crée un serveur avec l'egg **Python Generic** ou utilise l'image Docker
 2. Upload les fichiers du projet
-3. Configure le port `5000` (ou via la variable `PORT`)
+3. Configure le port `7778` (ou via la variable `PORT` / `SERVER_PORT`)
 4. Le script `main.py` (ou `start.sh`) s'occupe de tout :
    - Entraînement automatique si le modèle n'existe pas
    - Lancement du serveur Flask
 
-Variable d'environnement disponible :
-- `PORT` — port d'écoute (défaut : `5000`)
+Variables d'environnement disponibles :
+- `HOST` — adresse de bind (défaut : `0.0.0.0`)
+- `PORT` / `SERVER_PORT` — port d'écoute (défaut : `7778`)
+- `SERVER_IP` — IP externe affichée dans les logs (Pterodactyl)
+- `FLASK_DEBUG` — activer le mode debug Flask (`true`/`false`)
 
 ---
 
@@ -194,7 +201,7 @@ python train.py
 ### Exemple `/chat`
 
 ```bash
-curl -X POST http://localhost:5000/chat \
+curl -X POST http://localhost:7778/chat \
   -H "Content-Type: application/json" \
   -d '{"message": "Bonjour Atlas !"}'
 ```
@@ -214,6 +221,7 @@ Réponse :
 numpy      # Calcul matriciel (réseau de neurones)
 flask      # Serveur web
 flask-cors # CORS pour les requêtes cross-origin
+requests   # Recherche web (DuckDuckGo, Wikipedia)
 ```
 
 **Aucune librairie d'IA** n'est utilisée.
